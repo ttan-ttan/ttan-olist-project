@@ -1,0 +1,10 @@
+# Binaries & Executables
+*.exe
+dist/
+build/
+*.spec
+
+# Temporary Data Exports
+export_all/
+export_all*.zip
+*.parquet
