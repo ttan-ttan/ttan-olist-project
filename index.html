@@ -860,7 +860,7 @@
                   <span class="text-[9px] font-mono bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">Permanent</span>
                 </div>
                 <p class="text-[10px] text-slate-400 truncate">PySpark notebooks, modular cleaning scripts & CI/CD workflows[cite: 9].</p>
-                <a href="https://github.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-cyan-400 hover:text-cyan-300 font-bold pt-0.5">
+                <a href="https://github.com/ttan-ttan/ttan-olist-project" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-cyan-400 hover:text-cyan-300 font-bold pt-0.5">
                   View Source Repository <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                 </a>
               </div>
@@ -932,29 +932,29 @@
 
             <div class="grid grid-cols-2 gap-3">
               <!-- Snapshot Card 1: Fabric Pipeline Orchestration -->
-              <div onclick="openImageModal('https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/fabric_pipeline.png', 'Microsoft Fabric Pipeline Dispatcher Architecture (Pipeline_dispatch)')" class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 space-y-2 cursor-pointer hover:border-cyan-400/80 transition-all group">
+              <div onclick="openImageModal('fabric_pipeline.png', 'Microsoft Fabric Pipeline Dispatcher Architecture (Pipeline_dispatch)')" class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 space-y-2 cursor-pointer hover:border-cyan-400/80 transition-all group">
                 <div class="flex justify-between items-center">
                   <span class="text-xs font-bold text-slate-200 truncate"><i class="fa-solid fa-gears text-amber-400 mr-1.5"></i>Fabric Orchestrator</span>
                   <span class="text-[9px] font-mono bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">Pipeline</span>
                 </div>
                 
-                <!-- Live Image Element linked to GitHub Raw -->
+                <!-- Relative Netlify Image Path -->
                 <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden relative aspect-video flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all">
-                  <img src="https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/fabric_pipeline.png" alt="Microsoft Fabric Pipeline Proof" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-center text-[10px] font-mono text-amber-400\'><i class=\'fa-solid fa-image-slash block text-lg mb-1\'></i>Upload fabric_pipeline.png to GitHub root</div>';">
+                  <img src="fabric_pipeline.png" alt="Microsoft Fabric Pipeline Proof" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-center text-[10px] font-mono text-amber-400\'><i class=\'fa-solid fa-image-slash block text-lg mb-1\'></i>Image failed to load</div>';">
                 </div>
                 <p class="text-[10px] text-slate-400 leading-tight">Medallion ELT pipeline execution across Bronze, Silver, and Gold layers[cite: 9].</p>
               </div>
 
               <!-- Snapshot Card 2: Power Automate Webhook -->
-              <div onclick="openImageModal('https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/power_automate.png', 'Power Automate Webhook Trigger & Fabric REST API Integration')" class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 space-y-2 cursor-pointer hover:border-purple-400/80 transition-all group">
+              <div onclick="openImageModal('power_automate.png', 'Power Automate Webhook Trigger & Fabric REST API Integration')" class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 space-y-2 cursor-pointer hover:border-purple-400/80 transition-all group">
                 <div class="flex justify-between items-center">
                   <span class="text-xs font-bold text-slate-200 truncate"><i class="fa-solid fa-bolt text-purple-400 mr-1.5"></i>Power Automate Flow</span>
                   <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800">Webhook</span>
                 </div>
                 
-                <!-- Live Image Element linked to GitHub Raw -->
+                <!-- Relative Netlify Image Path -->
                 <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden relative aspect-video flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] transition-all">
-                  <img src="https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/power_automate.png" alt="Power Automate Flow Proof" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-center text-[10px] font-mono text-amber-400\'><i class=\'fa-solid fa-image-slash block text-lg mb-1\'></i>Upload power_automate.png to GitHub root</div>';">
+                  <img src="power_automate.png" alt="Power Automate Flow Proof" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-center text-[10px] font-mono text-amber-400\'><i class=\'fa-solid fa-image-slash block text-lg mb-1\'></i>Image failed to load</div>';">
                 </div>
                 <p class="text-[10px] text-slate-400 leading-tight">Event-driven automation triggering Fabric pipeline upon GitHub merge[cite: 9].</p>
               </div>
@@ -1273,7 +1273,7 @@
       await new Promise(r => setTimeout(r, 300));
       actor.style.opacity = '0';
 
-      /* SMOOTH FADE DIRECTLY TO POWER BI DASHBOARD (NO WHITE FLASH) */
+      /* SMOOTH FADE DIRECTLY TO POWER BI DASHBOARD */
       journeyStage.style.opacity = '0';
       await new Promise(r => setTimeout(r, 500));
       journeyStage.style.display = 'none';
@@ -1293,7 +1293,6 @@
       document.getElementById('progressBar').style.width = `${progressPercent}%`;
 
       const mainBody = document.getElementById('mainBody');
-      /* Slides 1, 2, 3, 10, 11 use Businessman theme; Slides 4 to 9 use Clean Tech Grid theme */
       if (step === 1 || step === 2 || step === 3 || step === 10 || step === 11) {
         mainBody.className = "slide-bg-businessman text-slate-100 font-sans flex flex-col justify-between p-4 select-none";
       } else {
