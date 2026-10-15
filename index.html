@@ -17,9 +17,9 @@
       background-color: #020617;
     }
 
-    /* ---------------- BUILT-IN HIGH-TECH BACKGROUND THEMES (NO EXTERNAL FILES REQUIRED) ---------------- */
+    /* ---------------- BUILT-IN HIGH-TECH BACKGROUND THEMES ---------------- */
     
-    /* 1. Businessman & E-Commerce Specialist Theme (Slides 1, 2, 3, 10) */
+    /* 1. Businessman & E-Commerce Specialist Theme (Slides 1, 2, 3, 10, 11) */
     .slide-bg-businessman {
       background-color: #020617;
       background-image: 
@@ -97,29 +97,6 @@
     }
     .anim-stealth { animation: stealthCrouch 0.35s infinite ease-in-out; }
 
-    /* Radial Whiteout Light Glow */
-    #handWhiteout {
-      position: fixed;
-      pointer-events: none;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 40%, rgba(255,255,255,0) 80%);
-      transform: translate(-50%, -50%) scale(0);
-      transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in;
-      z-index: 60;
-      width: 250vmax;
-      height: 250vmax;
-    }
-    
-    #fullWhiteLayer {
-      position: fixed;
-      inset: 0;
-      background-color: #ffffff;
-      z-index: 61;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease-in;
-    }
-
     /* Scene State Machine */
     .scene-element { display: none !important; }
     .scene-visible { display: flex !important; }
@@ -134,12 +111,19 @@
 </head>
 <body id="mainBody" class="slide-bg-businessman text-slate-100 font-sans flex flex-col justify-between p-4 select-none">
 
-  <!-- Radial Whiteout Layers -->
-  <div id="handWhiteout"></div>
-  <div id="fullWhiteLayer"></div>
+  <!-- Modal Lightbox for Proof-of-Work Snapshots -->
+  <div id="imageModal" onclick="closeImageModal()" class="fixed inset-0 bg-slate-950/90 z-50 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-6 backdrop-blur-md">
+    <div class="relative max-w-5xl max-h-full border-2 border-cyan-500 rounded-2xl overflow-hidden shadow-2xl">
+      <img id="modalImg" src="" alt="Proof of Work Snapshot" class="max-w-full max-h-[85vh] object-contain">
+      <button onclick="closeImageModal()" class="absolute top-3 right-3 bg-slate-900/80 hover:bg-slate-800 text-white w-8 h-8 rounded-full border border-slate-700 flex items-center justify-center text-sm font-bold">
+        ✕
+      </button>
+      <div id="modalCaption" class="bg-slate-950 p-3 text-center text-xs font-mono text-cyan-300 border-t border-slate-800"></div>
+    </div>
+  </div>
 
   <!-- Story Navigator Floating Drawer -->
-  <aside id="navDrawer" class="fixed right-3 top-3 bottom-3 w-80 z-50 bg-slate-950/95 border-2 border-slate-800 rounded-3xl p-5 backdrop-blur-2xl shadow-2xl flex flex-col justify-between transition-all duration-300">
+  <aside id="navDrawer" class="fixed right-3 top-3 bottom-3 w-80 z-40 bg-slate-950/95 border-2 border-slate-800 rounded-3xl p-5 backdrop-blur-2xl shadow-2xl flex flex-col justify-between transition-all duration-300">
     <button onclick="toggleDrawer()" class="absolute -left-5 top-8 bg-cyan-400 text-slate-950 w-10 h-10 rounded-full border-2 border-slate-900 flex items-center justify-center shadow-2xl font-black hover:bg-cyan-300">
       <i id="drawerToggleIcon" class="fa-solid fa-chevron-right text-sm"></i>
     </button>
@@ -151,15 +135,15 @@
       </div>
 
       <p class="text-xs text-slate-400 font-mono uppercase tracking-widest">Current Scene</p>
-      <p id="sceneTitle" class="text-lg font-bold text-slate-100 mt-1 leading-snug">Slide 1 / 10: Title Screen</p>
+      <p id="sceneTitle" class="text-lg font-bold text-slate-100 mt-1 leading-snug">Slide 1 / 11: Title Screen</p>
 
       <div class="mt-4 bg-slate-900 border border-slate-800 rounded-2xl p-3.5">
         <div class="flex justify-between text-sm font-mono mb-2">
           <span class="text-slate-400">Progress</span>
-          <span id="sceneCounter" class="text-cyan-400 font-bold text-base">1 / 10</span>
+          <span id="sceneCounter" class="text-cyan-400 font-bold text-base">1 / 11</span>
         </div>
         <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
-          <div id="progressBar" class="bg-cyan-400 h-full w-[10%] transition-all duration-300"></div>
+          <div id="progressBar" class="bg-cyan-400 h-full w-[9%] transition-all duration-300"></div>
         </div>
       </div>
     </div>
@@ -627,7 +611,7 @@
     <div id="slide10Wrapper" class="scene-element w-full h-full flex flex-col justify-between relative p-1 overflow-hidden">
       
       <!-- Fixed Process Steps Top Ribbon (Shows when Dashboard appears) -->
-      <div id="topStepsRibbon" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-2xl p-2 grid grid-cols-8 gap-2 shadow-2xl opacity-0 transition-opacity duration-700 z-20 mb-2">
+      <div id="topStepsRibbon" class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-2xl p-2 grid grid-cols-8 gap-2 shadow-2xl opacity-0 transition-opacity duration-500 z-20 mb-2">
         <div class="bg-slate-900 border border-cyan-500/30 rounded-xl p-1.5 text-center">
           <span class="text-[9px] font-bold text-cyan-400 font-mono block">01</span>
           <p class="text-[10px] font-black text-slate-100 truncate">Hypotheses</p>
@@ -662,8 +646,8 @@
         </div>
       </div>
 
-      <!-- Stickman Circular Journey Stage (Phase 1 to 3) -->
-      <div id="stickmanJourneyStage" class="w-full h-full relative">
+      <!-- Stickman Circular Journey Stage -->
+      <div id="stickmanJourneyStage" class="w-full h-full relative transition-opacity duration-500">
         <div id="step1" class="step-card absolute right-[40%] top-[8%] w-48 bg-slate-950/90 border border-slate-800 rounded-2xl p-3 flex flex-col justify-between h-24 shadow-2xl">
           <div class="flex justify-between items-center"><span class="text-xs font-black text-cyan-400 font-mono">01</span><i class="fa-solid fa-lightbulb text-sm text-cyan-400"></i></div>
           <p class="text-xs font-black text-slate-100 leading-tight">TOPIC + HYPOTHESES</p>
@@ -743,9 +727,9 @@
               <p class="text-xs text-slate-400 font-mono">Fabric Direct Lake Storage • Real-Time Analytics Dashboard</p>
             </div>
           </div>
-          <a href="#" class="px-4 py-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-black rounded-xl shadow-lg flex items-center gap-2">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Report
-          </a>
+          <button onclick="nextScene()" class="px-5 py-2.5 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-black rounded-xl shadow-lg flex items-center gap-2 transition-all active:scale-95">
+            View Proof of Work & Links <i class="fa-solid fa-arrow-right"></i>
+          </button>
         </div>
 
         <div class="grid grid-cols-12 gap-4 items-stretch my-auto py-2">
@@ -848,26 +832,171 @@
 
     </div>
 
+    <!-- SLIDE 11: PROJECT DELIVERABLES, ACCESS LINKS & PROOF OF WORK SNAPSHOTS -->
+    <div id="slide11Wrapper" class="scene-element w-full h-full flex flex-col justify-between p-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-xs font-mono font-black text-cyan-400 uppercase tracking-widest">PROOF OF WORK & DELIVERABLES DIRECTORY</span>
+          <h2 class="text-3xl font-black text-slate-100">Architecture Proof of Work & Deliverables Hub</h2>
+        </div>
+        <span class="text-xs font-mono bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1 rounded-xl font-bold">
+          Group 2 • Error404
+        </span>
+      </div>
+
+      <div class="grid grid-cols-12 gap-6 my-auto h-full py-2">
+        <!-- Live Clickable Links Column -->
+        <div class="col-span-5 bg-slate-950/90 border-2 border-cyan-500/40 rounded-3xl p-5 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
+          <div>
+            <p class="text-sm font-black text-cyan-400 font-mono mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-link text-base"></i> Deliverable Links
+            </p>
+            
+            <div class="space-y-2.5">
+              <!-- GitHub Link -->
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 space-y-0.5 hover:border-cyan-500/50 transition-all">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-100"><i class="fa-brands fa-github text-cyan-400 mr-1.5"></i>1. GitHub Repository</span>
+                  <span class="text-[9px] font-mono bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">Permanent</span>
+                </div>
+                <p class="text-[10px] text-slate-400 truncate">PySpark notebooks, modular cleaning scripts & CI/CD workflows[cite: 9].</p>
+                <a href="https://github.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-cyan-400 hover:text-cyan-300 font-bold pt-0.5">
+                  View Source Repository <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+
+              <!-- Power BI Report Link -->
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 space-y-0.5 hover:border-amber-500/50 transition-all">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-100"><i class="fa-solid fa-chart-column text-amber-400 mr-1.5"></i>2. Power BI Live Dashboard</span>
+                  <span class="text-[9px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">Expires Oct 25</span>
+                </div>
+                <p class="text-[10px] text-slate-400 truncate">Direct Lake live dashboard for revenue and SLA insights[cite: 9].</p>
+                <a href="https://app.fabric.microsoft.com/groups/db31b021-c604-4f46-bef0-f45f32f8b60e/reports/a241455d-4844-4244-a1d8-676cd7c5ef3f/93c2baa6bbe67dd191ab?experience=power-bi" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-amber-300 hover:text-amber-200 font-bold pt-0.5">
+                  Open Power BI Dashboard <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+
+              <!-- Fabric Workspace Lineage Link -->
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 space-y-0.5 hover:border-purple-500/50 transition-all">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-100"><i class="fa-solid fa-sitemap text-purple-400 mr-1.5"></i>3. Fabric Workspace Lineage</span>
+                  <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 font-bold">Expires Oct 25</span>
+                </div>
+                <p class="text-[10px] text-slate-400 truncate">Lineage graph of Lakehouses, Delta tables, and pipelines[cite: 9].</p>
+                <a href="https://app.fabric.microsoft.com/groups/db31b021-c604-4f46-bef0-f45f32f8b60e/lineage?experience=fabric-developer" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-purple-300 hover:text-purple-200 font-bold pt-0.5">
+                  Open Lineage Graph <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+
+              <!-- Google Drive Hub Link -->
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 space-y-0.5 hover:border-blue-500/50 transition-all">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-100"><i class="fa-brands fa-google-drive text-blue-400 mr-1.5"></i>4. Google Drive Hub</span>
+                  <span class="text-[9px] font-mono bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded border border-blue-800">Public Hub</span>
+                </div>
+                <p class="text-[10px] text-slate-400 truncate">Exported PowerPoint deck, video, and Power Automate flows[cite: 9].</p>
+                <a href="https://docs.google.com/document/d/1xaZMAAX-5J0d4iJC1vxZOXzEOk5ao_m9_w1aOSYnFOk/edit?usp=sharing" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-blue-300 hover:text-blue-200 font-bold pt-0.5">
+                  Open Google Drive Documentation <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+
+              <!-- PowerPoint Live Deck Link -->
+              <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 space-y-0.5 hover:border-amber-500/50 transition-all">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-100"><i class="fa-solid fa-file-powerpoint text-amber-400 mr-1.5"></i>5. PowerPoint Presentation Deck</span>
+                  <span class="text-[9px] font-mono bg-amber-950 text-amber-300 px-1.5 py-0.5 rounded border border-amber-800 font-bold">OneDrive Live</span>
+                </div>
+                <p class="text-[10px] text-slate-400 truncate">Full presentation deck with architecture and metrics[cite: 9].</p>
+                <a href="https://onedrive.live.com/personal/1be3912c55ca5391/_layouts/15/Doc.aspx?sourcedoc=%7Bf2e0f246-7202-41e8-b8f6-51733bb5fc2f%7D&action=default&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3AvYy8xYmUzOTEyYzU1Y2E1MzkxL0lRQkc4dUR5QW5Mb1FiajJVWE03dGZ3dkFhQ2VNTjBIV0FSVUllVUVob253RnIwP2U9ek9wZEdz&slrid=931945a2-e081-0000-4a42-71be330a31e2&originalPath=aHR0cHM6Ly9vbmVkcml2ZS5saXZlLmNvbS86cDovZy9wZXJzb25hbC8xYmUzOTEyYzU1Y2E1MzkxL0lRQkc4dUR5QW5Mb1FiajJVWE03dGZ3dkFhQ2VNTjBIV0FSVUllVUVob253RnIwP3J0aW1lPWhmWTljYk1xMzBnJnJlZGVlbT1hSFIwY0hNNkx5OHhaSEoyTG0xekwzQXZZeTh4WW1Vek9URXlZelUxWTJFMU16a3hMMGxSUWtjNGRVUjVRVzVNYjFGaWFqSlZXRTAzZEdaM2RrRmhRMlZOVGpCSVYwRlNWVWxsVlVWb2IyNTNSbkl3UDJVOWVrOXdaRWR6&CID=2e9383a2-dab6-4558-9fc6-a219344b7779&_SRM=0%3AG%3A68&file=Olist_Black_Friday_Final_Presentation%20(1).pptx" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-mono text-amber-300 hover:text-amber-200 font-bold pt-0.5">
+                  Open PowerPoint Deck <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-[10px] font-mono text-slate-500 border-t border-slate-800 pt-1.5">
+            Team Members: Tan YJ, Ana, JieSong, Junjie • Date: 06 Oct 2026[cite: 9]
+          </p>
+        </div>
+
+        <!-- Embedded Proof of Work Visual Snapshots Column -->
+        <div class="col-span-7 bg-slate-950/90 border-2 border-cyan-500/40 rounded-3xl p-5 flex flex-col justify-between shadow-2xl backdrop-blur-xl">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <p class="text-sm font-black text-cyan-400 font-mono flex items-center gap-2">
+                <i class="fa-solid fa-camera text-base"></i> Proof of Work Architecture Snapshots
+              </p>
+              <span class="text-[10px] font-mono text-slate-400"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i>Click snapshot to zoom</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Snapshot Card 1: Fabric Pipeline Orchestration -->
+              <div onclick="openImageModal('https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/fabric_pipeline.png', 'Microsoft Fabric Pipeline Dispatcher Architecture (Pipeline_dispatch)')" class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 space-y-2 cursor-pointer hover:border-cyan-400/80 transition-all group">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200 truncate"><i class="fa-solid fa-gears text-amber-400 mr-1.5"></i>Fabric Orchestrator</span>
+                  <span class="text-[9px] font-mono bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-800">Pipeline</span>
+                </div>
+                
+                <!-- Live Image Element linked to GitHub Raw -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden relative aspect-video flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all">
+                  <img src="https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/fabric_pipeline.png" alt="Microsoft Fabric Pipeline Proof" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-center text-[10px] font-mono text-amber-400\'><i class=\'fa-solid fa-image-slash block text-lg mb-1\'></i>Upload fabric_pipeline.png to GitHub root</div>';">
+                </div>
+                <p class="text-[10px] text-slate-400 leading-tight">Medallion ELT pipeline execution across Bronze, Silver, and Gold layers[cite: 9].</p>
+              </div>
+
+              <!-- Snapshot Card 2: Power Automate Webhook -->
+              <div onclick="openImageModal('https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/power_automate.png', 'Power Automate Webhook Trigger & Fabric REST API Integration')" class="bg-slate-900 border border-slate-800 rounded-2xl p-2.5 space-y-2 cursor-pointer hover:border-purple-400/80 transition-all group">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-200 truncate"><i class="fa-solid fa-bolt text-purple-400 mr-1.5"></i>Power Automate Flow</span>
+                  <span class="text-[9px] font-mono bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800">Webhook</span>
+                </div>
+                
+                <!-- Live Image Element linked to GitHub Raw -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden relative aspect-video flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] transition-all">
+                  <img src="https://raw.githubusercontent.com/ttan-ttan/GenSG_FinalProject_OlistAnalysis/main/power_automate.png" alt="Power Automate Flow Proof" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'p-3 text-center text-[10px] font-mono text-amber-400\'><i class=\'fa-solid fa-image-slash block text-lg mb-1\'></i>Upload power_automate.png to GitHub root</div>';">
+                </div>
+                <p class="text-[10px] text-slate-400 leading-tight">Event-driven automation triggering Fabric pipeline upon GitHub merge[cite: 9].</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-2xl text-xs font-mono text-slate-300 leading-relaxed">
+              <i class="fa-solid fa-shield-halved text-cyan-400 mr-2"></i>
+              <strong>Proof of Work Justification:</strong> Screenshots prove full end-to-end functionality of Microsoft Fabric pipelines and Power Automate webhooks under restricted trial-tenant conditions[cite: 9].
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-2.5 rounded-2xl border border-slate-800 text-xs font-mono text-slate-400 flex items-center justify-between">
+            <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i>Proof of Work Verified[cite: 9]</span>
+            <button onclick="renderStep(1)" class="px-3 py-1 bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black rounded-xl text-xs transition-all active:scale-95">
+              Restart Story
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <script>
     let currentStep = 1;
-    const totalSteps = 10;
+    const totalSteps = 11;
     let isPlayingAll = false;
     let playTimer = null;
     let isDrawerOpen = true;
 
     const stepTitles = [
-      "Slide 1 / 10: Title Screen",
-      "Slide 2 / 10: 9 Datasets Orbit",
-      "Slide 3 / 10: Business Hypotheses Pop Out",
-      "Slide 4 / 10: Medallion Architecture & DE Lead",
-      "Slide 5 / 10: PySpark Compute Overload & Error",
-      "Slide 6 / 10: Blocked Engineers & Optimization Lock",
-      "Slide 7 / 10: Decoupling Strategy Mind Cloud",
-      "Slide 8 / 10: 401/404 Fabric API Lock",
-      "Slide 9 / 10: The Pivot Story Simulation",
-      "Slide 10 / 10: Stickman Action Journey to Power BI"
+      "Slide 1 / 11: Title Screen",
+      "Slide 2 / 11: 9 Datasets Orbit",
+      "Slide 3 / 11: Business Hypotheses Pop Out",
+      "Slide 4 / 11: Medallion Architecture & DE Lead",
+      "Slide 5 / 11: PySpark Compute Overload & Error",
+      "Slide 6 / 11: Blocked Engineers & Optimization Lock",
+      "Slide 7 / 11: Decoupling Strategy Mind Cloud",
+      "Slide 8 / 11: 401/404 Fabric API Lock",
+      "Slide 9 / 11: The Pivot Story Simulation",
+      "Slide 10 / 11: Stickman Action Journey to Power BI",
+      "Slide 11 / 11: Architecture Proof of Work & Deliverables Directory"
     ];
 
     function toggleDrawer() {
@@ -892,6 +1021,23 @@
       } else {
         el.classList.remove('scene-visible');
       }
+    }
+
+    /* LIGHTBOX MODAL FOR SNAPSHOT INSPECTION */
+    function openImageModal(src, caption) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImg');
+      const modalCaption = document.getElementById('modalCaption');
+      modalImg.src = src;
+      modalCaption.innerText = caption;
+      modal.classList.remove('pointer-events-none');
+      modal.style.opacity = '1';
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      modal.style.opacity = '0';
+      modal.classList.add('pointer-events-none');
     }
 
     /* TYPEWRITER ANIMATION FOR SLIDE 5 */
@@ -1050,8 +1196,6 @@
     /* SLIDE 10 STICKMAN CIRCULAR ACTION JOURNEY */
     const actor = document.getElementById('stickmanActor');
     const actionTag = document.getElementById('actionTag');
-    const handWhiteout = document.getElementById('handWhiteout');
-    const fullWhiteLayer = document.getElementById('fullWhiteLayer');
     const journeyStage = document.getElementById('stickmanJourneyStage');
     const powerBiFullContainer = document.getElementById('powerBiFullContainer');
     const topStepsRibbon = document.getElementById('topStepsRibbon');
@@ -1088,9 +1232,6 @@
       powerBiFullContainer.style.pointerEvents = 'none';
 
       const centerPos = getCenterPosStick('centerTarget');
-      
-      handWhiteout.style.left = (window.innerWidth / 2) + 'px';
-      handWhiteout.style.top = (window.innerHeight / 2) + 'px';
 
       actor.style.left = centerPos.x;
       actor.style.top = centerPos.y;
@@ -1132,24 +1273,19 @@
       await new Promise(r => setTimeout(r, 300));
       actor.style.opacity = '0';
 
-      /* RADIAL WHITEOUT EXPANSION */
-      handWhiteout.style.transform = 'translate(-50%, -50%) scale(1)';
-      await new Promise(r => setTimeout(r, 1400));
-      fullWhiteLayer.style.opacity = '1';
-      await new Promise(r => setTimeout(r, 400));
-
-      /* REVEAL FULL SCREEN POWER BI DASHBOARD & FIXED TOP STEPS */
+      /* SMOOTH FADE DIRECTLY TO POWER BI DASHBOARD (NO WHITE FLASH) */
+      journeyStage.style.opacity = '0';
+      await new Promise(r => setTimeout(r, 500));
       journeyStage.style.display = 'none';
+
       topStepsRibbon.style.opacity = '1';
       powerBiFullContainer.style.opacity = '1';
       powerBiFullContainer.style.pointerEvents = 'auto';
-
-      fullWhiteLayer.style.opacity = '0';
-      handWhiteout.style.transform = 'translate(-50%, -50%) scale(0)';
     }
 
     function renderStep(step) {
       currentStep = step;
+
       document.getElementById('sceneTitle').innerText = stepTitles[step - 1];
       document.getElementById('sceneCounter').innerText = `${step} / ${totalSteps}`;
       
@@ -1157,8 +1293,8 @@
       document.getElementById('progressBar').style.width = `${progressPercent}%`;
 
       const mainBody = document.getElementById('mainBody');
-      /* Slides 1, 2, 3, 10 use Businessman theme; Slides 4 to 9 use Clean Tech Grid theme */
-      if (step === 1 || step === 2 || step === 3 || step === 10) {
+      /* Slides 1, 2, 3, 10, 11 use Businessman theme; Slides 4 to 9 use Clean Tech Grid theme */
+      if (step === 1 || step === 2 || step === 3 || step === 10 || step === 11) {
         mainBody.className = "slide-bg-businessman text-slate-100 font-sans flex flex-col justify-between p-4 select-none";
       } else {
         mainBody.className = "slide-bg-clean text-slate-100 font-sans flex flex-col justify-between p-4 select-none";
