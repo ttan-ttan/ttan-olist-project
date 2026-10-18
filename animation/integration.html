@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabric CI/CD Workaround & Pivot Story</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .path-card { transition: all 0.3s ease; }
+    .path-blocked {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.4);
+      background-color: rgba(127, 29, 29, 0.2) !important;
+    }
+    .path-partial {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+      background-color: rgba(120, 53, 15, 0.2) !important;
+    }
+    .path-success {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+      background-color: rgba(6, 78, 59, 0.2) !important;
+    }
+    .moving-packet {
+      transition: all 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes alertShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .shake { animation: alertShake 0.4s ease-in-out; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-6 flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto w-full flex justify-between items-center pb-4 border-b border-slate-800">
+    <div>
+      <h1 class="text-xl font-bold bg-gradient-to-r from-red-400 via-amber-400 to-emerald-400 bg-clip-text text-transparent">
+        Overcoming Fabric Trial Limits: The Pivot Story
+      </h1>
+      <p class="text-xs text-slate-400">Visualizing Native Restrictions, Trigger Notebook REST API, and Power Automate Webhook Solutions</p>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="runPivotStory()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow-lg flex items-center gap-2">
+        <i class="fa-solid fa-play"></i> Play Full Pivot Story
+      </button>
+      <button onclick="resetStory()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Interactive Diagram Area -->
+  <main class="max-w-6xl mx-auto w-full my-auto py-6 relative">
+
+    <!-- Moving Data / API Request Packet -->
+    <div id="packet" class="moving-packet absolute z-30 opacity-0 pointer-events-none flex flex-col items-center" style="top: 0px; left: 0px;">
+      <div id="packetShape" class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm shadow-xl shadow-blue-500/50">
+        <i id="packetIcon" class="fa-brands fa-github"></i>
+      </div>
+      <span id="packetBadge" class="text-[9px] font-mono bg-slate-900/90 text-slate-200 px-2 py-0.5 rounded border border-slate-700 mt-1 whitespace-nowrap shadow">
+        Git Push
+      </span>
+    </div>
+
+    <!-- 5 Workflow Routes -->
+    <div class="space-y-3.5 relative z-10">
+      
+      <!-- ROUTE 1: Native Fabric Git Sync (BLOCKED) -->
+      <div id="route1" class="path-card bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 w-64">
+          <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 text-xs flex items-center justify-center font-bold">1</span>
+          <div>
+            <p class="text-xs font-bold text-slate-200">Native Fabric Git Sync</p>
+            <p class="text-[10px] text-slate-400">Intended 2-Way Workspace Sync</p>
+          </div>
+        </div>
+        <div id="target1" class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+          <i class="fa-solid fa-ban text-red-500 text-sm"></i>
+          <span class="text-[11px] font-mono text-red-400 font-semibold">BLOCKED: Trial Tenant (No Admin Privileges)</span>
+        </div>
+      </div>
+
+      <!-- ROUTE 2: Fabric REST API Notebook Update (BLOCKED) -->
+      <div id="route2" class="path-card bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 w-64">
+          <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 text-xs flex items-center justify-center font-bold">2</span>
+          <div>
+            <p class="text-xs font-bold text-slate-200">Fabric REST API Update</p>
+            <p class="text-[10px] text-slate-400">GitHub Action Calling Fabric API</p>
+          </div>
+        </div>
+        <div id="target2" class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+          <i class="fa-solid fa-lock text-red-500 text-sm"></i>
+          <span class="text-[11px] font-mono text-red-400 font-semibold">BLOCKED: 401/404 & Pipeline API Blocked</span>
+        </div>
+      </div>
+
+      <!-- ROUTE 3: Direct OneLake Code Upload (PARTIALLY PASSED) -->
+      <div id="route3" class="path-card bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 w-64">
+          <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 text-xs flex items-center justify-center font-bold">3</span>
+          <div>
+            <p class="text-xs font-bold text-slate-200">OneLake Direct Upload</p>
+            <p class="text-[10px] text-slate-400">Upload <code class="text-amber-300">src/</code> directly via Action</p>
+          </div>
+        </div>
+        <div id="target3" class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+          <i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm"></i>
+          <span class="text-[11px] font-mono text-amber-400 font-semibold">PARTIALLY PASSED: Pipeline still Permission Denied & Complex Configuration for notebook</span>
+        </div>
+      </div>
+
+      <!-- ROUTE 4: TRIGGER NOTEBOOK REST API SOLUTION (PASSED) -->
+      <div id="route4" class="path-card bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 w-64">
+          <span class="w-6 h-6 rounded-full bg-emerald-900 text-emerald-300 text-xs flex items-center justify-center font-bold">4</span>
+          <div>
+            <p class="text-xs font-bold text-emerald-400">PASSED: Trigger Notebook Solution</p>
+            <p class="text-[10px] text-slate-400">Service Principal + REST API Timestamp Push</p>
+          </div>
+        </div>
+        <div id="target4" class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+          <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+          <span class="text-[11px] font-mono text-emerald-400 font-semibold">PASSED: Service Principal + Fabric REST API to push only 1 trigger notebook with updated timestamp</span>
+        </div>
+      </div>
+
+      <!-- ROUTE 5: POWER AUTOMATE WEBHOOK BACKUP (PASSED BACKUP) -->
+      <div id="route5" class="path-card bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-col gap-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-cyan-900 text-cyan-300 text-xs flex items-center justify-center font-bold">5</span>
+            <div>
+              <p class="text-xs font-bold text-cyan-400">PASSED (BACKUP): Power Automate Webhook Workflow</p>
+              <p class="text-[10px] text-slate-400">GitHub Merge → Power Automate Webhook → Fabric Pipeline Run → Dashboard Refreshed</p>
+            </div>
+          </div>
+          <span id="target5Badge" class="text-[11px] font-mono text-slate-500 font-semibold px-2 py-0.5 rounded bg-slate-950 border border-slate-800">
+            Awaiting Trigger
+          </span>
+        </div>
+
+        <!-- Row 5 Execution Sequence Nodes -->
+        <div class="grid grid-cols-4 gap-3 pt-1">
+          <div id="stg1" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-center">
+            <p class="text-[11px] font-bold text-slate-300">GitHub Merge</p>
+            <p class="text-[9px] text-slate-500">PR Action Closed</p>
+          </div>
+          <div id="stg2" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-center">
+            <p class="text-[11px] font-bold text-purple-400">Fabric REST Notebook</p>
+            <p class="text-[9px] text-slate-500">Pushes Timestamp</p>
+          </div>
+          <div id="stg3" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-center">
+            <p class="text-[11px] font-bold text-cyan-400">Power Automate</p>
+            <p class="text-[9px] text-slate-500">Webhook Trigger</p>
+          </div>
+          <div id="stg4" class="bg-slate-950 border border-slate-800 rounded-xl p-2 text-center">
+            <p class="text-[11px] font-bold text-emerald-400">Fabric Pipeline Run</p>
+            <p class="text-[9px] text-slate-500">Dashboard Updated</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Explanation & Console Log Footer -->
+  <footer class="max-w-6xl mx-auto w-full grid grid-cols-3 gap-4 border-t border-slate-800 pt-4">
+    
+    <!-- Explanation Note -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs flex flex-col justify-between">
+      <div>
+        <p class="font-bold text-amber-400 border-b border-slate-800 pb-1 flex justify-between">
+          <span id="expTitle">Attempt Status</span>
+          <span id="expTag" class="text-slate-500 font-mono">Ready</span>
+        </p>
+        <p id="expBody" class="mt-2 text-slate-300 leading-relaxed text-[11px]">
+          Click "Play Full Pivot Story" to simulate each workflow path, observe blocked/partially passed routes, and trace the successful Trigger Notebook + Webhook deployment pipeline.
+        </p>
+      </div>
+    </div>
+
+    <!-- Live Log Console -->
+    <div class="col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-3 font-mono text-[11px]">
+      <div class="flex justify-between items-center text-slate-400 font-bold mb-1 pb-1 border-b border-slate-800">
+        <span><i class="fa-solid fa-terminal mr-2"></i>Attempt & Execution Logs</span>
+        <span id="statusBadge" class="text-slate-500">IDLE</span>
+      </div>
+      <div id="consoleLogs" class="space-y-1 text-slate-300 h-20 overflow-y-auto">
+        <p class="text-slate-500">[SYSTEM] Awaiting simulation launch...</p>
+      </div>
+    </div>
+
+  </footer>
+
+  <script>
+    const packet = document.getElementById('packet');
+    const shape = document.getElementById('packetShape');
+    const icon = document.getElementById('packetIcon');
+    const badge = document.getElementById('packetBadge');
+    const logs = document.getElementById('consoleLogs');
+    const statusBadge = document.getElementById('statusBadge');
+
+    function getPos(elemId) {
+      const el = document.getElementById(elemId);
+      const rect = el.getBoundingClientRect();
+      const parentRect = document.querySelector('main').getBoundingClientRect();
+      return {
+        x: (rect.left + rect.width / 2 - parentRect.left - 20) + 'px',
+        y: (rect.top + rect.height / 2 - parentRect.top - 20) + 'px'
+      };
+    }
+
+    function writeLog(msg, color="text-slate-300") {
+      logs.innerHTML += `<p class="${color}">[${new Date().toLocaleTimeString()}] ${msg}</p>`;
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    function setExplanation(title, tag, body) {
+      document.getElementById('expTitle').innerText = title;
+      document.getElementById('expTag').innerText = tag;
+      document.getElementById('expBody').innerText = body;
+    }
+
+    async function moveTo(elemId, duration = 1800) {
+      const pos = getPos(elemId);
+      packet.style.left = pos.x;
+      packet.style.top = pos.y;
+      await new Promise(r => setTimeout(r, duration));
+    }
+
+    async function runPivotStory() {
+      resetStory();
+      packet.style.opacity = '1';
+      statusBadge.innerText = "TESTING ROUTES";
+      statusBadge.className = "text-amber-400 font-bold";
+
+      // --- ATTEMPT 1: Native Git Sync ---
+      writeLog("Attempt 1: Connecting Fabric Workspace directly to GitHub repo...", "text-blue-400");
+      setExplanation("Attempt 1: Native Git Sync", "FAILED", "Tried enabling Fabric workspace Git integration. Failed because workspace was created in a trial tenant without Power BI Admin Portal privileges.");
+      shape.className = "w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm shadow-lg shadow-blue-500/50";
+      icon.className = "fa-brands fa-git-alt";
+      badge.innerText = "Native Git Sync";
+      
+      await moveTo('route1', 1800); 
+      await moveTo('target1', 1500); 
+      document.getElementById('route1').classList.add('path-blocked', 'shake');
+      writeLog("❌ BLOCKED! Git button greyed out. Trial tenant lacks admin access.", "text-red-400 font-bold");
+      await new Promise(r => setTimeout(r, 2200)); 
+
+      // --- ATTEMPT 2: REST API ---
+      writeLog("Attempt 2: Using GitHub Actions + Service Principal to call Fabric REST API...", "text-purple-400");
+      setExplanation("Attempt 2: Fabric REST API", "FAILED", "Attempted CD workflow via REST API. Notebook API allowed limited json updates, but Pipeline API execution was completely blocked with 401/404 permission errors.");
+      shape.className = "w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm shadow-lg shadow-purple-500/50";
+      icon.className = "fa-solid fa-code";
+      badge.innerText = "REST API Call";
+
+      await moveTo('route2', 1800);
+      await moveTo('target2', 1500);
+      document.getElementById('route2').classList.add('path-blocked', 'shake');
+      writeLog("❌ BLOCKED! HTTP 401/404 Permission Denied on Pipeline execution API.", "text-red-400 font-bold");
+      await new Promise(r => setTimeout(r, 2200));
+
+      // --- ATTEMPT 3: OneLake Direct ---
+      writeLog("Attempt 3: Direct OneLake upload & notebook sync testing...", "text-amber-400");
+      setExplanation("Attempt 3: Direct OneLake Upload", "PARTIAL", "Uploaded helper files directly, but pipeline triggering still returned Permission Denied and required complex notebook configuration.");
+      shape.className = "w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm shadow-lg shadow-amber-500/50";
+      icon.className = "fa-solid fa-database";
+      badge.innerText = "OneLake Upload";
+
+      await moveTo('route3', 1800);
+      await moveTo('target3', 1500);
+      document.getElementById('route3').classList.add('path-partial');
+      writeLog("⚠️ PARTIALLY PASSED: Pipeline still Permission Denied & Complex Configuration for notebook.", "text-amber-400 font-bold");
+      await new Promise(r => setTimeout(r, 2200));
+
+      // --- ATTEMPT 4: TRIGGER NOTEBOOK REST API ---
+      writeLog("Attempt 4: Service Principal + REST API Timestamp Push...", "text-emerald-400");
+      setExplanation("Attempt 4: Trigger Notebook", "PASSED", "Successfully used Service Principal + Fabric REST API to update 1 trigger notebook with a fresh timestamp payload.");
+      shape.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm shadow-lg shadow-emerald-500/50";
+      icon.className = "fa-solid fa-file-code";
+      badge.innerText = "REST Notebook";
+
+      await moveTo('route4', 1800);
+      await moveTo('target4', 1500);
+      document.getElementById('route4').classList.add('path-success');
+      writeLog("✅ PASSED: Service Principal + Fabric REST API successfully updated 1 trigger notebook with timestamp.", "text-emerald-400 font-bold");
+      await new Promise(r => setTimeout(r, 2200));
+
+      // --- ATTEMPT 5: POWER AUTOMATE WEBHOOK BACKUP ---
+      writeLog("🚀 Attempt 5: Triggering Power Automate Webhook Workflow...", "text-cyan-400 font-bold");
+      setExplanation("Selected Solution: Webhook Listener Pivot", "SUCCESS", "GitHub PR merge triggers Fabric REST API notebook update AND Power Automate Webhook, invoking Fabric Pipeline Run to refresh Power BI Dashboard!");
+      document.getElementById('route5').classList.add('path-success');
+      document.getElementById('target5Badge').innerText = "EXECUTING WORKFLOW";
+      document.getElementById('target5Badge').className = "text-[11px] font-mono text-cyan-400 font-bold px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800";
+
+      // Step 5.1: GitHub Merge
+      shape.className = "w-10 h-10 rounded-full bg-slate-200 text-slate-900 flex items-center justify-center text-sm shadow-lg shadow-slate-200/50";
+      icon.className = "fa-brands fa-github";
+      badge.innerText = "GitHub Merge";
+      await moveTo('stg1', 1800);
+      writeLog("1. GitHub: PR merged into 'main' branch.", "text-slate-300");
+
+      // Step 5.2: Fabric REST API Notebook
+      shape.className = "w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm shadow-lg shadow-purple-500/50";
+      icon.className = "fa-solid fa-code";
+      badge.innerText = "REST Notebook";
+      await moveTo('stg2', 1800);
+      writeLog("2. Fabric REST API Notebook: Pushed updated timestamp payload.", "text-purple-400");
+
+      // Step 5.3: Power Automate Webhook
+      shape.className = "w-10 h-10 rounded-full bg-cyan-500 text-white flex items-center justify-center text-sm shadow-lg shadow-cyan-500/50";
+      icon.className = "fa-solid fa-bolt";
+      badge.innerText = "Power Automate";
+      await moveTo('stg3', 1800);
+      writeLog("3. Power Automate: Received webhook event to initiate pipeline run.", "text-cyan-400");
+
+      // Step 5.4: Fabric Pipeline Run & Dashboard Updated
+      shape.className = "w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-base shadow-xl shadow-emerald-500/80 animate-bounce";
+      icon.className = "fa-solid fa-chart-column";
+      badge.innerText = "Dashboard Updated";
+      await moveTo('stg4', 2000);
+      writeLog("4. Fabric Pipeline Run: Executed ELT pipeline successfully → Power BI Dashboard Updated!", "text-emerald-400 font-bold");
+
+      statusBadge.innerText = "PIVOT SUCCESSFUL";
+      statusBadge.className = "text-emerald-400 font-bold";
+      document.getElementById('target5Badge').innerText = "SUCCESSFUL PIPELINE";
+    }
+
+    function resetStory() {
+      packet.style.opacity = '0';
+      document.querySelectorAll('.path-card').forEach(c => c.classList.remove('path-blocked', 'path-partial', 'path-success', 'shake'));
+      document.getElementById('target5Badge').innerText = "Awaiting Trigger";
+      document.getElementById('target5Badge').className = "text-[11px] font-mono text-slate-500 font-semibold px-2 py-0.5 rounded bg-slate-950 border border-slate-800";
+      logs.innerHTML = '<p class="text-slate-500">[SYSTEM] Awaiting simulation launch...</p>';
+      statusBadge.innerText = "IDLE";
+      statusBadge.className = "text-slate-500";
+      setExplanation("Attempt Status", "Ready", "Click 'Play Full Pivot Story' to simulate each workflow path, observe blocked/partially passed routes, and trace the successful Trigger Notebook + Webhook deployment pipeline.");
+    }
+  </script>
+</body>
+</html>

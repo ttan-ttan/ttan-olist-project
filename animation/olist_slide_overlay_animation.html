@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olist Black Friday - Circular Stickman Action Journey</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* Slide Background */
+    .slide-bg {
+      background-image: url('image_d78080.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Step Cards hidden until stickman lands */
+    .step-card {
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Active Glowing State upon landing */
+    .step-active {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.8), inset 0 0 15px rgba(56, 189, 248, 0.4) !important;
+      background-color: rgba(15, 23, 42, 0.95) !important;
+    }
+
+    /* Stickman Position Smooth Movement */
+    .stickman-actor {
+      transition: left 1.1s cubic-bezier(0.25, 1, 0.5, 1), top 1.1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* ---------------- STICKMAN ACTION ANIMATIONS ---------------- */
+    
+    /* 1. Fast Running / Sprinting Gait */
+    @keyframes legL-run { 0%, 100% { transform: rotate(-35deg); } 50% { transform: rotate(35deg); } }
+    @keyframes legR-run { 0%, 100% { transform: rotate(35deg); } 50% { transform: rotate(-35deg); } }
+    @keyframes armL-run { 0%, 100% { transform: rotate(40deg); } 50% { transform: rotate(-40deg); } }
+    @keyframes armR-run { 0%, 100% { transform: rotate(-40deg); } 50% { transform: rotate(40deg); } }
+
+    .anim-sprint #legL { animation: legL-run 0.25s infinite ease-in-out; transform-origin: 50px 72px; }
+    .anim-sprint #legR { animation: legR-run 0.25s infinite ease-in-out; transform-origin: 50px 72px; }
+    .anim-sprint #armL { animation: armL-run 0.25s infinite ease-in-out; transform-origin: 50px 45px; }
+    .anim-sprint #armR { animation: armR-run 0.25s infinite ease-in-out; transform-origin: 50px 45px; }
+
+    /* 2. Full Ninja Flip / Mid-Air Vault */
+    @keyframes ninjaFlip {
+      0% { transform: rotate(0deg) translateY(0); }
+      50% { transform: rotate(180deg) translateY(-25px); }
+      100% { transform: rotate(360deg) translateY(0); }
+    }
+    .anim-flip { animation: ninjaFlip 0.8s ease-in-out; }
+
+    /* 3. Parkour Roll */
+    @keyframes parkourRoll {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(360deg) scale(0.6); }
+      100% { transform: rotate(720deg) scale(1); }
+    }
+    .anim-roll { animation: parkourRoll 0.8s ease-in-out; }
+
+    /* 4. Stealth Sneak Crouch */
+    @keyframes stealthCrouch {
+      0%, 100% { transform: translateY(0) skewX(-15deg); }
+      50% { transform: translateY(8px) skewX(-5deg); }
+    }
+    .anim-stealth { animation: stealthCrouch 0.35s infinite ease-in-out; }
+
+    /* Radial Whiteout Light Glow from Hand */
+    #handWhiteout {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.95) 40%, rgba(255,255,255,0) 80%);
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in;
+      z-index: 50;
+      width: 250vmax;
+      height: 250vmax;
+    }
+    
+    #fullWhiteLayer {
+      position: fixed;
+      inset: 0;
+      background-color: #ffffff;
+      z-index: 51;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease-in;
+    }
+  </style>
+</head>
+<body class="slide-bg text-slate-100 min-h-screen font-sans flex flex-col justify-between p-8 overflow-hidden relative select-none">
+
+  <!-- Dynamic Radial Light Expansion Layer -->
+  <div id="handWhiteout"></div>
+  <div id="fullWhiteLayer"></div>
+
+  <!-- Header Controls -->
+  <header class="max-w-7xl mx-auto w-full flex justify-end items-center z-20">
+    <div class="flex gap-3 bg-slate-950/80 p-2 rounded-2xl border border-slate-800 backdrop-blur-md shadow-2xl">
+      <button id="playBtn" onclick="playCircularJourney()" class="px-5 py-2 bg-cyan-400 hover:bg-cyan-300 text-slate-950 text-xs font-bold rounded-xl shadow-lg shadow-cyan-400/30 flex items-center gap-2 transition-all hover:scale-105 active:scale-95">
+        <i class="fa-solid fa-person-running text-xs"></i> Launch Circular Journey
+      </button>
+      <button onclick="resetScene()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition-all">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Interactive Circular Stage Layout (Shifted Left) -->
+  <main id="stageCanvas" class="max-w-7xl mx-auto w-full my-auto relative z-10 h-[540px]">
+    
+    <!-- Step 1: Upper Right Orbit -->
+    <div id="step1" class="step-card absolute right-[42%] top-[10%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">01</span><i class="fa-solid fa-lightbulb text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">TOPIC + HYPOTHESES</p>
+      <span class="text-[9px] text-slate-400">Business Framing</span>
+    </div>
+
+    <!-- Step 2: Top Center -->
+    <div id="step2" class="step-card absolute left-[30%] top-[4%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">02</span><i class="fa-solid fa-sitemap text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">DESIGN SCHEMA</p>
+      <span class="text-[9px] text-slate-400">Star Schema Modeling</span>
+    </div>
+
+    <!-- Step 3: Top Left -->
+    <div id="step3" class="step-card absolute left-[12%] top-[10%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">03</span><i class="fa-solid fa-code text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">VSC + GIT + FABRIC</p>
+      <span class="text-[9px] text-slate-400">Dev Setup & Versioning</span>
+    </div>
+
+    <!-- Step 4: Far Left Middle -->
+    <div id="step4" class="step-card absolute left-[2%] top-[38%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">04</span><i class="fa-solid fa-database text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">9 DATASETS</p>
+      <span class="text-[9px] text-slate-400">Raw E-Commerce CSVs</span>
+    </div>
+
+    <!-- Step 5: Bottom Left -->
+    <div id="step5" class="step-card absolute left-[12%] top-[68%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">05</span><i class="fa-solid fa-users-gear text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">TEAM WORKSTREAMS</p>
+      <span class="text-[9px] text-slate-400">Task Allocation</span>
+    </div>
+
+    <!-- Step 6: Bottom Center -->
+    <div id="step6" class="step-card absolute left-[30%] top-[74%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">06</span><i class="fa-solid fa-gears text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">ELT BUILD</p>
+      <span class="text-[9px] text-slate-400">Bronze → Silver → Gold</span>
+    </div>
+
+    <!-- Step 7: Bottom Right Orbit -->
+    <div id="step7" class="step-card absolute right-[42%] top-[68%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">07</span><i class="fa-solid fa-vial-circle-check text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">TEST + ORCHESTRATE</p>
+      <span class="text-[9px] text-slate-400">Webhook & Pytest</span>
+    </div>
+
+    <!-- Step 8: Middle Right Orbit -->
+    <div id="step8" class="step-card absolute right-[34%] top-[38%] w-44 bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex flex-col justify-between h-24">
+      <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-cyan-400 font-mono">08</span><i class="fa-solid fa-chart-pie text-xs text-cyan-400"></i></div>
+      <p class="text-xs font-bold text-slate-100 leading-tight">POWER BI + VIDEO</p>
+      <span class="text-[9px] text-slate-400">Direct Lake Insights</span>
+    </div>
+
+    <!-- Businessman Hand Target (On the right background) -->
+    <div id="manHandTarget" class="absolute right-[33%] top-[48%] w-10 h-10 rounded-full flex items-center justify-center pointer-events-none"></div>
+
+    <!-- DYNAMICALLY ANIMATED STICKMAN ACTOR -->
+    <div id="stickmanActor" class="stickman-actor absolute z-30 opacity-0 pointer-events-none flex flex-col items-center" style="top: 0px; left: 0px;">
+      
+      <svg id="stickSvg" class="w-14 h-20 drop-shadow-[0_0_15px_rgba(34,211,238,1)]" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Head -->
+        <circle cx="50" cy="22" r="14" fill="#22d3ee" stroke="#ffffff" stroke-width="3"/>
+        <!-- Torso -->
+        <line x1="50" y1="36" x2="50" y2="72" stroke="#22d3ee" stroke-width="7" stroke-linecap="round"/>
+        <!-- Dynamic Arms -->
+        <line id="armL" x1="50" y1="45" x2="18" y2="60" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+        <line id="armR" x1="50" y1="45" x2="82" y2="60" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+        <!-- Dynamic Legs -->
+        <line id="legL" x1="50" y1="72" x2="25" y2="110" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+        <line id="legR" x1="50" y1="72" x2="75" y2="110" stroke="#22d3ee" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+
+      <span id="actionTag" class="text-[9px] font-mono font-bold bg-cyan-950 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-500/50 mt-0.5 whitespace-nowrap opacity-0 shadow-lg">
+        Emerging...
+      </span>
+    </div>
+
+  </main>
+
+  <!-- Footer Console -->
+  <footer class="max-w-7xl mx-auto w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 flex justify-between items-center z-20 backdrop-blur-md">
+    <div class="flex items-center gap-3 pl-2">
+      <div class="w-7 h-7 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800/50 flex items-center justify-center text-xs">
+        <i class="fa-solid fa-rotate-right"></i>
+      </div>
+      <div>
+        <p id="statusTitle" class="text-xs font-bold text-slate-100">Ready for Circular Launch</p>
+        <p id="statusSub" class="text-[11px] text-slate-400">Click "Launch Circular Journey" to start the 10-second action orbit.</p>
+      </div>
+    </div>
+    <span class="text-[10px] font-mono text-slate-400 tracking-wider pr-2">Group 2 • October 2026</span>
+  </footer>
+
+  <script>
+    const actor = document.getElementById('stickmanActor');
+    const stickSvg = document.getElementById('stickSvg');
+    const actionTag = document.getElementById('actionTag');
+    const handWhiteout = document.getElementById('handWhiteout');
+    const fullWhiteLayer = document.getElementById('fullWhiteLayer');
+    const statusTitle = document.getElementById('statusTitle');
+    const statusSub = document.getElementById('statusSub');
+
+    const stepActions = [
+      { id: "step1", name: "Jackie Vault", tag: "Jackie Vault!", anim: "anim-flip", text: "Vaults onto Step 1 (Topic & Hypotheses)!" },
+      { id: "step2", name: "Bond Dash", tag: "Bond Dash", anim: "anim-sprint", text: "Dashes onto Step 2 (Schema Design)!" },
+      { id: "step3", name: "Thief Sneak", tag: "Thief Sneak", anim: "anim-stealth", text: "Sneaks onto Step 3 (VSC + Git + Fabric)!" },
+      { id: "step4", name: "Ninja Flip", tag: "Ninja Flip!", anim: "anim-flip", text: "Flips onto Step 4 (9 Datasets)!" },
+      { id: "step5", name: "Mini Sprint", tag: "Fast Sprint", anim: "anim-sprint", text: "Sprints onto Step 5 (Team Workstreams)!" },
+      { id: "step6", name: "Parkour Roll", tag: "Parkour Roll", anim: "anim-roll", text: "Rolls onto Step 6 (ELT Build)!" },
+      { id: "step7", name: "Side Shuffle", tag: "Side Dash", anim: "anim-sprint", text: "Shuffles onto Step 7 (Test & Orchestrate)!" },
+      { id: "step8", name: "Hero Leap", tag: "Hero Leap!", anim: "anim-flip", text: "Leaps onto Step 8 (Power BI & Video)!" }
+    ];
+
+    function getCenterPos(elemId) {
+      const el = document.getElementById(elemId);
+      const rect = el.getBoundingClientRect();
+      const parentRect = document.getElementById('stageCanvas').getBoundingClientRect();
+      return {
+        x: (rect.left + rect.width / 2 - parentRect.left - 28) + 'px',
+        y: (rect.top + rect.height / 2 - parentRect.top - 40) + 'px'
+      };
+    }
+
+    function resetScene() {
+      actor.style.opacity = '0';
+      actionTag.style.opacity = '0';
+      handWhiteout.style.transform = 'translate(-50%, -50%) scale(0)';
+      fullWhiteLayer.style.opacity = '0';
+      actor.className = "stickman-actor absolute z-30 opacity-0 pointer-events-none flex flex-col items-center";
+      
+      document.querySelectorAll('.step-card').forEach(c => {
+        c.classList.remove('step-active');
+      });
+
+      statusTitle.innerText = "Ready for Circular Launch";
+      statusSub.innerText = "Click 'Launch Circular Journey' to start the 10-second action orbit.";
+    }
+
+    async function playCircularJourney() {
+      resetScene();
+
+      // Get exact screen pixel coordinates of businessman hand
+      const handEl = document.getElementById('manHandTarget');
+      const handRect = handEl.getBoundingClientRect();
+      
+      // Position the whiteout center exactly at the hand
+      handWhiteout.style.left = (handRect.left + handRect.width / 2) + 'px';
+      handWhiteout.style.top = (handRect.top + handRect.height / 2) + 'px';
+
+      // 1. EMERGE FROM HAND (2 Seconds)
+      statusTitle.innerText = "Phase 1: Emerging from Hand";
+      statusSub.innerText = "Peeking out from the businessman's hand...";
+      
+      const handPos = getCenterPos('manHandTarget');
+      actor.style.left = handPos.x;
+      actor.style.top = handPos.y;
+      actor.style.transform = 'scale(0.2)';
+      actor.style.opacity = '1';
+      actionTag.innerText = "Peeking...";
+      actionTag.style.opacity = '1';
+
+      await new Promise(r => setTimeout(r, 600));
+
+      actor.style.transform = 'scale(1)';
+      actionTag.innerText = "Ready!";
+      await new Promise(r => setTimeout(r, 1400));
+
+      // 2. ACTION PARKOUR ORBIT THROUGH 8 STEPS (10 Seconds total)
+      statusTitle.innerText = "Phase 2: Circular Process Orbit";
+
+      for (let i = 0; i < stepActions.length; i++) {
+        const act = stepActions[i];
+        statusSub.innerText = act.text;
+        actionTag.innerText = act.tag;
+
+        const pos = getCenterPos(act.id);
+        actor.style.left = pos.x;
+        actor.style.top = pos.y;
+        
+        actor.className = `stickman-actor absolute z-30 opacity-1 pointer-events-none flex flex-col items-center ${act.anim}`;
+
+        await new Promise(r => setTimeout(r, 600));
+
+        document.getElementById(act.id).classList.add('step-active');
+
+        await new Promise(r => setTimeout(r, 600));
+        actor.className = "stickman-actor absolute z-30 opacity-1 pointer-events-none flex flex-col items-center";
+      }
+
+      // 3. LEAP BACK TO HAND & DISAPPEAR STEPS SEQUENTIALLY
+      statusTitle.innerText = "Phase 3: Returning to Hand";
+      statusSub.innerText = "Leaping back into the hand as process steps collapse...";
+      actionTag.innerText = "Returning!";
+
+      actor.style.left = handPos.x;
+      actor.style.top = handPos.y;
+      actor.style.transform = 'scale(0.4)';
+
+      for (let i = 1; i <= 8; i++) {
+        await new Promise(r => setTimeout(r, 150));
+        document.getElementById(`step${i}`).classList.remove('step-active');
+      }
+
+      await new Promise(r => setTimeout(r, 400));
+      actor.style.opacity = '0';
+
+      // 4. RADIAL WHITEOUT EXPANSION FROM HAND (2 Seconds)
+      statusTitle.innerText = "Phase 4: Radial Whiteout Expansion";
+      statusSub.innerText = "Bright white light igniting at the businessman's hand and expanding full-screen...";
+      
+      // Expand radial circle out from the hand coordinate
+      handWhiteout.style.transform = 'translate(-50%, -50%) scale(1)';
+
+      await new Promise(r => setTimeout(r, 1600));
+      fullWhiteLayer.style.opacity = '1';
+      await new Promise(r => setTimeout(r, 400));
+    }
+  </script>
+</body>
+</html>

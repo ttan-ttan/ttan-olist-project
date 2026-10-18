@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governed Fabric Data Pipeline Simulation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .node-card { transition: all 0.3s ease; cursor: pointer; }
+    .node-card:hover { border-color: #475569; }
+    .node-active {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 18px rgba(59, 130, 246, 0.4);
+      transform: scale(1.04);
+    }
+    .moving-packet {
+      transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-6 flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto w-full flex justify-between items-center pb-4 border-b border-slate-800">
+    <div>
+      <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
+        Governed Fabric CI/CD & Data Pipeline Journey
+      </h1>
+      <p class="text-xs text-slate-400">8-Stage Flow across 3 Rows: Click any node to view its detailed step breakdown & logic.</p>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="runPipeline()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow-lg flex items-center gap-2">
+        <i class="fa-solid fa-play"></i> Run Full Pipeline
+      </button>
+      <button onclick="resetPipeline()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Pipeline Canvas (3-Row Layout) -->
+  <main class="max-w-6xl mx-auto w-full my-auto py-6 relative">
+
+    <!-- Animated Data Packet -->
+    <div id="packet" class="moving-packet absolute z-30 opacity-0 pointer-events-none flex flex-col items-center" style="top: 0px; left: 0px;">
+      <div id="packetShape" class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm shadow-xl shadow-blue-500/50">
+        <i id="packetIcon" class="fa-solid fa-code"></i>
+      </div>
+      <span id="packetBadge" class="text-[9px] font-mono bg-slate-900/90 text-slate-200 px-2 py-0.5 rounded border border-slate-700 mt-1 whitespace-nowrap shadow">
+        cleaning_*.py
+      </span>
+    </div>
+
+    <div class="space-y-8 relative z-10">
+      
+      <!-- ROW 1: Local Dev & CI -->
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest w-24">Row 1:<br>Local & CI</span>
+        
+        <div id="step1" onclick="selectStep('step1')" class="node-card w-64 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-950 text-blue-400 flex items-center justify-center border border-blue-800/50">
+            <i class="fa-solid fa-laptop-code text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">1. Local VS Code</p>
+            <p class="text-[10px] text-slate-400">Unit test via <code class="text-blue-300">pytest</code></p>
+          </div>
+        </div>
+
+        <i class="fa-solid fa-arrow-right text-slate-700"></i>
+
+        <div id="step2" onclick="selectStep('step2')" class="node-card w-64 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-purple-950 text-purple-400 flex items-center justify-center border border-purple-800/50">
+            <i class="fa-brands fa-git-alt text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">2. Git PR Merge</p>
+            <p class="text-[10px] text-slate-400">Feature → <code class="text-purple-300">main</code> branch</p>
+          </div>
+        </div>
+
+        <i class="fa-solid fa-arrow-right text-slate-700"></i>
+
+        <div id="step3" onclick="selectStep('step3')" class="node-card w-64 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-indigo-950 text-indigo-400 flex items-center justify-center border border-indigo-800/50">
+            <i class="fa-solid fa-paper-plane text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">3. GitHub Webhook</p>
+            <p class="text-[10px] text-slate-400">Emits POST JSON payload</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: Orchestration & Sync -->
+      <div class="flex items-center justify-around pl-28">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest w-24">Row 2:<br>Orchestration</span>
+
+        <div id="step4" onclick="selectStep('step4')" class="node-card w-72 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-cyan-950 text-cyan-400 flex items-center justify-center border border-cyan-800/50">
+            <i class="fa-solid fa-bolt text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">4. Power Automate</p>
+            <p class="text-[10px] text-slate-400">Validates PR & calls Fabric API</p>
+          </div>
+        </div>
+
+        <i class="fa-solid fa-arrow-right text-slate-700"></i>
+
+        <div id="step5" onclick="selectStep('step5')" class="node-card w-72 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-sky-950 text-sky-400 flex items-center justify-center border border-sky-800/50">
+            <i class="fa-solid fa-arrows-rotate text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">5. Sync_Code Notebook</p>
+            <p class="text-[10px] text-slate-400">Pulls <code class="text-sky-300">src/</code> into OneLake Files</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 3: Fabric ELT & Power BI -->
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest w-24">Row 3:<br>ELT & DQ</span>
+
+        <div id="step6" onclick="selectStep('step6')" class="node-card w-64 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-amber-950 text-amber-400 flex items-center justify-center border border-amber-800/50">
+            <i class="fa-solid fa-box-archive text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">6. Bronze Ingest</p>
+            <p class="text-[10px] text-slate-400">Raw CSV → Delta Tables</p>
+          </div>
+        </div>
+
+        <i class="fa-solid fa-arrow-right text-slate-700"></i>
+
+        <div id="step7" onclick="selectStep('step7')" class="node-card w-64 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-yellow-950 text-yellow-400 flex items-center justify-center border border-yellow-800/50">
+            <i class="fa-solid fa-shield-halved text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">7. Silver / Gold DQ</p>
+            <p class="text-[10px] text-slate-400">Cleans nulls & Star Schema</p>
+          </div>
+        </div>
+
+        <i class="fa-solid fa-arrow-right text-slate-700"></i>
+
+        <div id="step8" onclick="selectStep('step8')" class="node-card w-64 bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-950 text-emerald-400 flex items-center justify-center border border-emerald-800/50">
+            <i class="fa-solid fa-chart-column text-base"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-200">8. Power BI Direct Lake</p>
+            <p class="text-[10px] text-slate-400">Zero-copy auto dashboard</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Step Explanation Note & Execution Audit Logs -->
+  <footer class="max-w-6xl mx-auto w-full grid grid-cols-3 gap-4 border-t border-slate-800 pt-4">
+    
+    <!-- Step Explanation Note -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs flex flex-col justify-between">
+      <div>
+        <p class="font-bold text-blue-400 border-b border-slate-800 pb-1 flex justify-between">
+          <span id="noteTitle">Step Explanation Note</span>
+          <span id="noteStepNum" class="text-slate-500 font-mono">Step 1/8</span>
+        </p>
+        <div id="noteContent" class="mt-2 space-y-1 text-slate-300 leading-relaxed text-[11px]">
+          <p><strong class="text-slate-200">Input:</strong> Python helper modules (<code class="text-blue-300">cleaning_*.py</code>, <code class="text-blue-300">validation_*.py</code>).</p>
+          <p><strong class="text-slate-200">Logic:</strong> Local development in VS Code. Developer executes <code class="text-blue-300">pytest</code> and <code class="text-blue-300">flake8</code> locally to catch bugs before pushing.</p>
+          <p><strong class="text-slate-200">Output:</strong> Clean, unit-tested PySpark code ready for Git commit.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Execution & Audit Logs -->
+    <div class="col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-3 font-mono text-[11px]">
+      <div class="flex justify-between items-center text-slate-400 font-bold mb-1 pb-1 border-b border-slate-800">
+        <span><i class="fa-solid fa-terminal mr-2"></i>Execution & Audit Logs</span>
+        <span id="pipelineStatus" class="text-slate-500">IDLE</span>
+      </div>
+      <div id="consoleLogs" class="space-y-1 text-slate-300 h-24 overflow-y-auto">
+        <p class="text-slate-500">[SYSTEM] Click "Run Full Pipeline" or click any step to inspect...</p>
+      </div>
+    </div>
+
+  </footer>
+
+  <script>
+    const packet = document.getElementById('packet');
+    const shape = document.getElementById('packetShape');
+    const icon = document.getElementById('packetIcon');
+    const badge = document.getElementById('packetBadge');
+    const logs = document.getElementById('consoleLogs');
+    const pipelineStatus = document.getElementById('pipelineStatus');
+
+    const stepNotes = {
+      step1: {
+        num: "Step 1/8",
+        title: "1. Local VS Code Development",
+        input: "Raw Python transformation helper scripts.",
+        logic: "Developer writes transformation modules locally. Runs pytest and flake8 to validate code logic without spending cloud compute.",
+        output: "Passed unit test suite; code staged for commit."
+      },
+      step2: {
+        num: "Step 2/8",
+        title: "2. Git Pull Request & Merge",
+        input: "Staged code pushed to GitHub feature branch.",
+        logic: "Peer review or CI status checks pass. Feature branch is merged into 'main'.",
+        output: "Updated 'main' branch triggering GitHub Repository Events."
+      },
+      step3: {
+        num: "Step 3/8",
+        title: "3. GitHub Webhook Dispatch",
+        input: "GitHub Pull Request merge event.",
+        logic: "Outbound Webhook automatically emits HTTP POST payload containing PR action status, commit hash, and branch details.",
+        output: "JSON payload dispatched to Power Automate listener URL."
+      },
+      step4: {
+        num: "Step 4/8",
+        title: "4. Power Automate Webhook Bridge",
+        input: "Incoming HTTP request payload from GitHub.",
+        logic: "Evaluates condition: action == 'closed' AND merged == true. Invokes Microsoft Fabric REST API to trigger the pipeline.",
+        output: "Handshake 200 OK returned; Fabric execution job launched."
+      },
+      step5: {
+        num: "Step 5/8",
+        title: "5. Sync_Code Notebook Execution",
+        input: "GitHub raw file repository URLs.",
+        logic: "Fabric notebook fetches latest cleaning_*.py and validation_*.py modules directly from GitHub into OneLake (/Files/src/).",
+        output: "OneLake storage populated with latest transformation modules."
+      },
+      step6: {
+        num: "Step 6/8",
+        title: "6. Bronze Ingest (CSV -> Delta)",
+        input: "9 Raw Olist CSV files in /Files/Bronze/.",
+        logic: "Reads raw CSVs, enforces initial ingestion schema, and writes raw append-only Bronze Delta tables.",
+        output: "Bronze Delta Tables created; ingestion row count logged."
+      },
+      step7: {
+        num: "Step 7/8",
+        title: "7. Silver & Gold Data Quality Gates",
+        input: "Bronze Delta Tables + /Files/src/ modules.",
+        logic: "Imports cleaning modules to filter null primary keys (Silver). Applies validation modules to enforce Star Schema foreign key constraints (Gold).",
+        output: "100% clean Silver/Gold Delta tables; DQ audit metrics recorded."
+      },
+      step8: {
+        num: "Step 8/8",
+        title: "8. Power BI Direct Lake Refresh",
+        input: "Gold Fact & Dimension Delta Tables.",
+        logic: "Semantic Model automatically queries Gold Delta tables directly over OneLake without duplicating data or running slow import refreshes.",
+        output: "Executive dashboard immediately renders fresh, verified insights."
+      }
+    };
+
+    function selectStep(stepId) {
+      setActive(stepId);
+      const n = stepNotes[stepId];
+      if (n) {
+        document.getElementById('noteTitle').innerText = n.title;
+        document.getElementById('noteStepNum').innerText = n.num;
+        document.getElementById('noteContent').innerHTML = `
+          <p><strong class="text-slate-200">Input:</strong> ${n.input}</p>
+          <p><strong class="text-slate-200">Logic:</strong> ${n.logic}</p>
+          <p><strong class="text-slate-200">Output:</strong> ${n.output}</p>
+        `;
+      }
+    }
+
+    function getPos(stepId) {
+      const el = document.getElementById(stepId);
+      const rect = el.getBoundingClientRect();
+      const parentRect = document.querySelector('main').getBoundingClientRect();
+      return {
+        x: (rect.left + rect.width / 2 - parentRect.left - 20) + 'px',
+        y: (rect.top + rect.height / 2 - parentRect.top - 20) + 'px'
+      };
+    }
+
+    function setActive(stepId) {
+      document.querySelectorAll('.node-card').forEach(n => n.classList.remove('node-active'));
+      if (stepId) document.getElementById(stepId).classList.add('node-active');
+    }
+
+    function writeLog(text, color="text-slate-300") {
+      logs.innerHTML += `<p class="${color}">[${new Date().toLocaleTimeString()}] ${text}</p>`;
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function moveTo(stepId, duration = 1000) {
+      selectStep(stepId);
+      const pos = getPos(stepId);
+      packet.style.left = pos.x;
+      packet.style.top = pos.y;
+      await new Promise(r => setTimeout(r, duration));
+    }
+
+    async function runPipeline() {
+      resetPipeline();
+      packet.style.opacity = '1';
+      pipelineStatus.innerText = "RUNNING";
+      pipelineStatus.className = "text-blue-400 font-bold";
+
+      // 1. VS Code
+      writeLog("VS Code: pytest passed (0 errors). Staging commits.", "text-blue-400");
+      shape.className = "w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm shadow-lg shadow-blue-500/50";
+      icon.className = "fa-solid fa-code";
+      badge.innerText = "cleaning_*.py";
+      await moveTo('step1', 1000);
+
+      // 2. Git PR
+      writeLog("Git PR #14 merged to 'main' branch.", "text-purple-400");
+      shape.className = "w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm shadow-lg shadow-purple-500/50";
+      icon.className = "fa-solid fa-code-merge";
+      badge.innerText = "PR Merged";
+      await moveTo('step2', 1000);
+
+      // 3. Webhook
+      writeLog("GitHub Outbound Webhook dispatched payload.", "text-indigo-400");
+      shape.className = "w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm shadow-lg shadow-indigo-500/50";
+      icon.className = "fa-solid fa-paper-plane";
+      badge.innerText = "JSON Payload";
+      await moveTo('step3', 1000);
+
+      // 4. Power Automate
+      writeLog("Power Automate: Condition PR+Merged=true passed. POST to Fabric API.", "text-cyan-400");
+      shape.className = "w-10 h-10 rounded-full bg-cyan-500 text-white flex items-center justify-center text-sm shadow-lg shadow-cyan-500/50";
+      icon.className = "fa-solid fa-bolt";
+      badge.innerText = "HTTP 200 OK";
+      await moveTo('step4', 1100);
+
+      // 5. Sync Code
+      writeLog("Sync_Code: Pulled latest PySpark modules to /Files/src/.", "text-sky-400");
+      shape.className = "w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center text-sm shadow-lg shadow-sky-500/50";
+      icon.className = "fa-solid fa-arrows-rotate";
+      badge.innerText = "Modules Synced";
+      await moveTo('step5', 1100);
+
+      // 6. Bronze
+      writeLog("Bronze Ingest: 115,897 raw CSV rows written to Bronze Delta.", "text-amber-400");
+      shape.className = "w-10 h-10 rounded-md bg-amber-600 text-white flex items-center justify-center text-sm shadow-lg shadow-amber-600/50";
+      icon.className = "fa-solid fa-box-archive";
+      badge.innerText = "Bronze Delta";
+      await moveTo('step6', 1100);
+
+      // 7. Silver / Gold DQ
+      writeLog("Silver/Gold DQ: Filtered 142 null primary key rows. Fact/Dim foreign keys verified.", "text-yellow-400");
+      shape.className = "w-10 h-10 rounded-xl bg-yellow-400 text-slate-900 flex items-center justify-center text-sm shadow-lg shadow-yellow-400/50";
+      icon.className = "fa-solid fa-shield-halved";
+      badge.innerText = "Gold Schema";
+      await moveTo('step7', 1100);
+
+      // 8. Power BI
+      writeLog("Serving: Power BI Direct Lake semantic model updated.", "text-emerald-400");
+      shape.className = "w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-base shadow-xl shadow-emerald-500/80 animate-bounce";
+      icon.className = "fa-solid fa-chart-pie";
+      badge.innerText = "Power BI Live";
+      await moveTo('step8', 800);
+
+      pipelineStatus.innerText = "COMPLETED";
+      pipelineStatus.className = "text-emerald-400 font-bold";
+    }
+
+    function resetPipeline() {
+      setActive(null);
+      packet.style.opacity = '0';
+      const pos = getPos('step1');
+      packet.style.left = pos.x;
+      packet.style.top = pos.y;
+      logs.innerHTML = '<p class="text-slate-500">[SYSTEM] Click "Run Full Pipeline" or click any step to inspect...</p>';
+      pipelineStatus.innerText = "IDLE";
+      pipelineStatus.className = "text-slate-500";
+      selectStep('step1');
+    }
+  </script>
+</body>
+</html>
