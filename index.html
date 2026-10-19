@@ -10,9 +10,16 @@
   <!-- GSAP Animation Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
-    html, body {
-      width: 100vw; height: 100vh; margin: 0; padding: 0; overflow: hidden;
-      background-color: #0f172a; color: #f8fafc; font-family: ui-sans-serif, system-ui, sans-serif;
+    html,
+    body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: ui-sans-serif, system-ui, sans-serif;
     }
 
     /* --- Background Themes --- */
@@ -23,29 +30,131 @@
         linear-gradient(to bottom right, rgba(15, 23, 42, 0.75), rgba(2, 6, 23, 0.85)),
         url('background2.jpg');
     }
+
     .slide-bg-alert {
       background-image:
         radial-gradient(circle at 50% 50%, rgba(225, 29, 72, 0.2), transparent 60%),
         linear-gradient(to bottom right, rgba(15, 23, 42, 0.75), rgba(2, 6, 23, 0.85)),
         url('background2.jpg');
     }
+
     .slide-bg-cover {
       background-image:
         linear-gradient(to bottom right, rgba(15, 23, 42, 0.70), rgba(2, 6, 23, 0.90)),
         url('background11.jpg');
     }
-    .slide-bg-main, .slide-bg-alert, .slide-bg-cover {
-      background-size: cover; background-position: center; background-repeat: no-repeat;
+
+    .slide-bg-main,
+    .slide-bg-alert,
+    .slide-bg-cover {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     /* --- Keyframe Effects --- */
-    @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); } 50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.6); } }
-    .pulse-glow { animation: pulse-glow 2s infinite; }
+    @keyframes pulse-glow {
 
-    @keyframes flow-horizontal { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+      0%,
+      100% {
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+      }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes flow-horizontal {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
     .animate-flow-h {
       background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.8), transparent);
-      background-size: 200% 100%; animation: flow-horizontal 2s linear infinite;
+      background-size: 200% 100%;
+      animation: flow-horizontal 2s linear infinite;
+    }
+
+    @keyframes pipeline-card-glow {
+      0%,
+      100% {
+        box-shadow: 0 0 0 rgba(34, 211, 238, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.16);
+      }
+    }
+
+    .pipeline-card-glow {
+      animation: pipeline-card-glow 2.4s ease-in-out infinite;
+    }
+
+    .pipeline-neon-dot {
+      position: absolute;
+      z-index: 30;
+      width: 16px;
+      height: 16px;
+      border-radius: 9999px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: filter 180ms ease;
+    }
+
+    .pipeline-neon-fabric {
+      background: #67e8f9;
+      box-shadow: 0 0 7px 3px #22d3ee, 0 0 20px 9px rgba(34, 211, 238, 0.9), 0 0 42px 14px rgba(34, 211, 238, 0.45);
+    }
+
+    .pipeline-neon-local {
+      background: #e9d5ff;
+      box-shadow: 0 0 7px 3px #c084fc, 0 0 20px 9px rgba(168, 85, 247, 0.95), 0 0 42px 14px rgba(168, 85, 247, 0.5);
+    }
+
+    .pipeline-env-divider {
+      position: absolute;
+      z-index: 20;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      transform: translateX(-50%);
+      pointer-events: none;
+      background: linear-gradient(to bottom, #c084fc, #a855f7 48%, #22d3ee 52%, #67e8f9);
+      box-shadow: 0 0 10px 2px rgba(34, 211, 238, 0.38), 0 0 10px 2px rgba(168, 85, 247, 0.38);
+    }
+
+    @keyframes pipeline-dot-pulse {
+      0%,
+      100% {
+        scale: 1;
+      }
+
+      50% {
+        scale: 1.35;
+      }
+    }
+
+    .pipeline-neon-dot-active {
+      animation: pipeline-dot-pulse 700ms ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pipeline-card-glow,
+      .pipeline-neon-dot-active {
+        animation: none;
+      }
     }
 
     /* Scene Control & Perspective Canvas */
@@ -53,78 +162,127 @@
       perspective: 1200px;
       perspective-origin: 50% 50%;
     }
-    .scene-element { 
-      display: none !important; 
-      opacity: 0; 
+
+    .scene-element {
+      display: none !important;
+      opacity: 0;
       will-change: transform, opacity;
     }
-    .scene-visible { 
-      display: flex !important; 
+
+    .scene-visible {
+      display: flex !important;
     }
 
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
   </style>
 </head>
 
 <body id="appBody" class="slide-bg-main flex flex-col w-screen h-screen select-none transition-colors duration-700">
 
   <!-- FIXED TOP NAVIGATION -->
-  <nav class="fixed top-0 left-0 w-full h-20 bg-slate-900/95 border-b border-slate-800 z-50 flex items-center justify-between px-8 shadow-xl backdrop-blur-md">
+  <nav
+    class="fixed top-0 left-0 w-full h-20 bg-slate-900/95 border-b border-slate-800 z-50 flex items-center justify-between px-8 shadow-xl backdrop-blur-md">
     <div class="flex items-center gap-4 w-1/3">
       <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center border border-cyan-500/50">
         <i id="navIcon" class="fa-solid fa-server text-cyan-400 text-lg"></i>
       </div>
-      <span class="font-bold text-slate-200 text-base lg:text-lg tracking-wide hidden md:block">Olist Data Engineering Architecture</span>
+      <span class="font-bold text-slate-200 text-base lg:text-lg tracking-wide hidden md:block">Olist Data Engineering
+        Architecture</span>
     </div>
     <div class="flex flex-col items-center justify-center w-1/3">
       <h1 id="navTitle" class="text-base lg:text-lg font-black text-white tracking-wider uppercase">Loading...</h1>
       <div class="flex gap-1.5 mt-2" id="navProgress"></div>
     </div>
     <div class="flex items-center justify-end gap-4 w-1/3">
-      <button onclick="prevScene()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 text-base font-bold rounded-lg border border-slate-600 transition-all active:scale-95">
+      <button onclick="prevScene()"
+        class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 text-base font-bold rounded-lg border border-slate-600 transition-all active:scale-95">
         <i class="fa-solid fa-chevron-left mr-1"></i> Prev
       </button>
-      <button onclick="nextScene()" id="nextBtn" class="px-6 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-base font-black rounded-lg shadow-lg transition-all active:scale-95">
+      <button onclick="nextScene()" id="nextBtn"
+        class="px-6 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-base font-black rounded-lg shadow-lg transition-all active:scale-95">
         Next <i class="fa-solid fa-chevron-right ml-1"></i>
       </button>
     </div>
   </nav>
 
   <!-- MAIN STAGE -->
-  <main id="stageCanvas" class="w-full h-full pt-20 relative z-10 flex items-center justify-center p-6 md:p-10 overflow-y-auto">
+  <main id="stageCanvas"
+    class="w-full h-full pt-20 relative z-10 flex items-center justify-center p-6 md:p-10 overflow-y-auto">
 
     <!-- SLIDE 1: THE BUSINESS CONTEXT -->
-    <div id="slide1" class="scene-element scene-visible w-full h-full flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 max-w-7xl mx-auto">
+    <div id="slide1"
+      class="scene-element scene-visible w-full h-full flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 max-w-7xl mx-auto">
       <div class="w-full lg:w-5/12 bg-slate-800/50 p-8 rounded-2xl border border-slate-700 slide-card shadow-xl">
         <h3 class="text-cyan-400 font-mono text-sm uppercase tracking-widest mb-4 font-bold">The Data Source</h3>
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100 mb-6">9 Disconnected Tables</h2>
         <div class="grid grid-cols-3 gap-4">
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Orders</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Items</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Customers</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Payments</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Reviews</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Products</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Sellers</p></div>
-          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i><p class="text-xs font-mono text-slate-300 font-bold">Geolocation</p></div>
-          <div class="bg-slate-800 border border-amber-500/50 p-4 rounded-xl text-center shadow-[0_0_15px_rgba(245,158,11,0.2)]"><i class="fa-solid fa-file-csv text-2xl text-amber-400 mb-2"></i><p class="text-xs font-mono text-amber-300 font-bold">Categories</p></div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Orders</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Items</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Customers</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Payments</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Reviews</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Products</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Sellers</p>
+          </div>
+          <div class="bg-slate-800 border border-slate-600 p-4 rounded-xl text-center"><i
+              class="fa-solid fa-file-csv text-2xl text-slate-400 mb-2"></i>
+            <p class="text-xs font-mono text-slate-300 font-bold">Geolocation</p>
+          </div>
+          <div
+            class="bg-slate-800 border border-amber-500/50 p-4 rounded-xl text-center shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+            <i class="fa-solid fa-file-csv text-2xl text-amber-400 mb-2"></i>
+            <p class="text-xs font-mono text-amber-300 font-bold">Categories</p>
+          </div>
         </div>
       </div>
       <div class="w-full lg:w-7/12 space-y-6 slide-card">
-        <h1 class="text-4xl lg:text-6xl font-black text-slate-100 leading-tight">Does Black Friday Change How Customers Buy?</h1>
-        <p class="text-xl lg:text-2xl text-slate-300 leading-relaxed">Transforming 100k+ raw Brazilian e-commerce orders into governed business intelligence.</p>
+        <h1 class="text-4xl lg:text-6xl font-black text-slate-100 leading-tight">Does Black Friday Change How Customers
+          Buy?</h1>
+        <p class="text-xl lg:text-2xl text-slate-300 leading-relaxed">Transforming 100k+ raw Brazilian e-commerce orders
+          into governed business intelligence.</p>
         <div class="space-y-4 mt-8">
           <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 flex gap-5 items-start shadow-md">
-            <div class="bg-blue-500/20 p-3 rounded-xl text-blue-400 mt-1"><i class="fa-solid fa-chart-line text-2xl"></i></div>
+            <div class="bg-blue-500/20 p-3 rounded-xl text-blue-400 mt-1"><i
+                class="fa-solid fa-chart-line text-2xl"></i></div>
             <div>
               <h4 class="text-slate-100 font-bold text-lg">1. Volume & Revenue</h4>
               <p class="text-base text-slate-300 mt-1">Measuring the gross sales & Average Order Value (AOV) impact.</p>
             </div>
           </div>
           <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 flex gap-5 items-start shadow-md">
-            <div class="bg-rose-500/20 p-3 rounded-xl text-rose-400 mt-1"><i class="fa-solid fa-truck-fast text-2xl"></i></div>
+            <div class="bg-rose-500/20 p-3 rounded-xl text-rose-400 mt-1"><i
+                class="fa-solid fa-truck-fast text-2xl"></i></div>
             <div>
               <h4 class="text-slate-100 font-bold text-lg">2. Operational Strain</h4>
               <p class="text-base text-slate-300 mt-1">Correlating delivery delays with customer review scores.</p>
@@ -135,57 +293,79 @@
     </div>
 
     <!-- SLIDE 2: DATA STRATEGY -->
-    <div id="slide2" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-8">
+    <div id="slide2"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-8">
       <div class="text-center w-full slide-card">
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Data Modeling: Physical Storage Strategy</h2>
-        <p class="text-slate-300 text-lg mt-2">Designing a strict Galaxy Schema mapped intentionally across Fabric Lakehouse unmanaged and managed layers.</p>
+        <p class="text-slate-300 text-lg mt-2">Designing a strict Galaxy Schema mapped intentionally across Fabric
+          Lakehouse unmanaged and managed layers.</p>
       </div>
       <div class="flex flex-col lg:flex-row items-stretch gap-6 w-full lg:h-[65%]">
-        <div class="w-full lg:w-5/12 bg-slate-800/50 p-6 lg:p-8 rounded-2xl border border-slate-700 flex flex-col justify-between slide-card">
-          <h3 class="text-cyan-400 font-mono text-sm uppercase tracking-widest mb-4 font-bold">Medallion ELT Pipeline</h3>
+        <div
+          class="w-full lg:w-5/12 bg-slate-800/50 p-6 lg:p-8 rounded-2xl border border-slate-700 flex flex-col justify-between slide-card">
+          <h3 class="text-cyan-400 font-mono text-sm uppercase tracking-widest mb-4 font-bold">Medallion ELT Pipeline
+          </h3>
           <div class="space-y-4">
             <!-- Bronze -->
             <div class="bg-amber-950/40 border border-amber-700/50 p-4 rounded-xl flex items-center gap-4">
-              <div class="w-12 h-12 rounded-full bg-amber-900 flex items-center justify-center text-amber-400 text-xl min-w-[48px]"><i class="fa-solid fa-box"></i></div>
+              <div
+                class="w-12 h-12 rounded-full bg-amber-900 flex items-center justify-center text-amber-400 text-xl min-w-[48px]">
+                <i class="fa-solid fa-box"></i></div>
               <div class="flex-1">
                 <div class="flex justify-between items-start">
                   <h4 class="text-amber-400 font-bold text-base">1. Bronze (Raw)</h4>
-                  <span class="bg-amber-900/80 border border-amber-700 text-amber-200 text-xs px-2.5 py-1 rounded font-mono">Unmanaged Files</span>
+                  <span
+                    class="bg-amber-900/80 border border-amber-700 text-amber-200 text-xs px-2.5 py-1 rounded font-mono">Unmanaged
+                    Files</span>
                 </div>
-                <p class="text-sm text-slate-200 mt-1">Ingest CSVs into <code class="text-amber-300">Files/bronze/</code> for immutable lineage.</p>
+                <p class="text-sm text-slate-200 mt-1">Ingest CSVs into <code
+                    class="text-amber-300">Files/bronze/</code> for immutable lineage.</p>
               </div>
             </div>
             <!-- Silver -->
             <div class="bg-slate-700/40 border border-slate-500/50 p-4 rounded-xl flex items-center gap-4">
-              <div class="w-12 h-12 rounded-full bg-slate-600 flex items-center justify-center text-slate-200 text-xl min-w-[48px]"><i class="fa-solid fa-filter"></i></div>
+              <div
+                class="w-12 h-12 rounded-full bg-slate-600 flex items-center justify-center text-slate-200 text-xl min-w-[48px]">
+                <i class="fa-solid fa-filter"></i></div>
               <div class="flex-1">
                 <div class="flex justify-between items-start">
                   <h4 class="text-slate-100 font-bold text-base">2. Silver (Conformed)</h4>
-                  <span class="bg-slate-600/80 border border-slate-500 text-slate-200 text-xs px-2.5 py-1 rounded font-mono">Managed Catalog</span>
+                  <span
+                    class="bg-slate-600/80 border border-slate-500 text-slate-200 text-xs px-2.5 py-1 rounded font-mono">Managed
+                    Catalog</span>
                 </div>
-                <p class="text-sm text-slate-200 mt-1">Standardize and drop nulls. Save as <code class="text-slate-300">dbo.silver_*</code>.</p>
+                <p class="text-sm text-slate-200 mt-1">Standardize and drop nulls. Save as <code
+                    class="text-slate-300">dbo.silver_*</code>.</p>
               </div>
             </div>
             <!-- Gold -->
             <div class="bg-yellow-900/40 border border-yellow-600/50 p-4 rounded-xl flex items-center gap-4 pulse-glow">
-              <div class="w-12 h-12 rounded-full bg-yellow-700 flex items-center justify-center text-yellow-300 text-xl min-w-[48px]"><i class="fa-solid fa-star"></i></div>
+              <div
+                class="w-12 h-12 rounded-full bg-yellow-700 flex items-center justify-center text-yellow-300 text-xl min-w-[48px]">
+                <i class="fa-solid fa-star"></i></div>
               <div class="flex-1">
                 <div class="flex justify-between items-start">
                   <h4 class="text-yellow-400 font-bold text-base">3. Gold (Analytics)</h4>
-                  <span class="bg-yellow-700/80 border border-yellow-600 text-yellow-200 text-xs px-2.5 py-1 rounded font-mono">Managed Catalog</span>
+                  <span
+                    class="bg-yellow-700/80 border border-yellow-600 text-yellow-200 text-xs px-2.5 py-1 rounded font-mono">Managed
+                    Catalog</span>
                 </div>
-                <p class="text-sm text-slate-200 mt-1">Establish strict Star Schema in <code class="text-yellow-300">dbo.gold_*</code>.</p>
+                <p class="text-sm text-slate-200 mt-1">Establish strict Star Schema in <code
+                    class="text-yellow-300">dbo.gold_*</code>.</p>
               </div>
             </div>
           </div>
         </div>
-        
-        <div class="w-full lg:w-7/12 bg-slate-800/50 p-6 lg:p-8 rounded-2xl border border-slate-700 flex flex-col relative overflow-hidden slide-card">
-          <h3 class="text-cyan-400 font-mono text-sm uppercase tracking-widest mb-4 font-bold z-10">Target Galaxy Schema Relationships</h3>
+
+        <div
+          class="w-full lg:w-7/12 bg-slate-800/50 p-6 lg:p-8 rounded-2xl border border-slate-700 flex flex-col relative overflow-hidden slide-card">
+          <h3 class="text-cyan-400 font-mono text-sm uppercase tracking-widest mb-4 font-bold z-10">Target Galaxy Schema
+            Relationships</h3>
           <div class="flex flex-col md:flex-row gap-6 h-full z-10">
             <!-- Dimensions -->
             <div class="w-full md:w-1/2 flex flex-col gap-3">
-              <h4 class="text-emerald-300 font-bold text-base border-b border-emerald-900 pb-2">4 Dimensions (The 'Who/What')</h4>
+              <h4 class="text-emerald-300 font-bold text-base border-b border-emerald-900 pb-2">4 Dimensions (The
+                'Who/What')</h4>
               <div class="bg-slate-900/80 border border-emerald-500/30 rounded-xl p-3 text-sm">
                 <span class="text-emerald-400 font-bold text-base">dim_customers</span> <br>
                 <span class="text-slate-300 text-xs">PK: customer_id</span>
@@ -205,7 +385,9 @@
             </div>
             <!-- Connection visual -->
             <div class="hidden md:flex flex-col justify-center items-center text-slate-500">
-               <i class="fa-solid fa-link text-lg"></i><div class="h-20 border-l-2 border-dashed border-slate-600 my-2"></div><i class="fa-solid fa-link text-lg"></i>
+              <i class="fa-solid fa-link text-lg"></i>
+              <div class="h-20 border-l-2 border-dashed border-slate-600 my-2"></div><i
+                class="fa-solid fa-link text-lg"></i>
             </div>
             <!-- Facts -->
             <div class="w-full md:w-1/2 flex flex-col justify-center gap-4">
@@ -227,40 +409,49 @@
     </div>
 
     <!-- SLIDE 3: THE FABRIC CONSTRAINT -->
-    <div id="slide3" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-5xl mx-auto space-y-8">
+    <div id="slide3"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-5xl mx-auto space-y-8">
       <div class="text-center slide-card">
-        <div class="inline-block bg-rose-500/20 text-rose-400 px-5 py-1.5 rounded-full text-xs lg:text-sm font-black uppercase tracking-widest mb-4 border border-rose-500/50">
+        <div
+          class="inline-block bg-rose-500/20 text-rose-400 px-5 py-1.5 rounded-full text-xs lg:text-sm font-black uppercase tracking-widest mb-4 border border-rose-500/50">
           <i class="fa-solid fa-triangle-exclamation mr-2"></i> The Engineering Bottleneck
         </div>
         <h2 class="text-4xl lg:text-5xl font-black text-slate-100">Fabric Trial Constraints</h2>
-        <p class="text-rose-200 mt-4 text-xl">We had the perfect data strategy, but 4 engineers sharing a free Microsoft Fabric Trial immediately hit a hard wall.</p>
+        <p class="text-rose-200 mt-4 text-xl">We had the perfect data strategy, but 4 engineers sharing a free Microsoft
+          Fabric Trial immediately hit a hard wall.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-6 max-w-4xl mx-auto">
         <div class="bg-slate-900 border border-rose-900/50 p-8 rounded-2xl shadow-xl text-center slide-card">
           <i class="fa-solid fa-microchip text-6xl text-rose-500 mb-6"></i>
           <h3 class="text-slate-100 font-bold text-2xl mb-3">Compute Unit Burn</h3>
-          <p class="text-base text-slate-300 leading-relaxed">Concurrent PySpark executions quickly overwhelmed the Trial capacity, causing timeouts and halting active development.</p>
+          <p class="text-base text-slate-300 leading-relaxed">Concurrent PySpark executions quickly overwhelmed the
+            Trial capacity, causing timeouts and halting active development.</p>
         </div>
         <div class="bg-slate-900 border border-rose-900/50 p-8 rounded-2xl shadow-xl text-center slide-card">
           <i class="fa-solid fa-users-slash text-6xl text-rose-500 mb-6"></i>
           <h3 class="text-slate-100 font-bold text-2xl mb-3">Collaboration Blocked</h3>
-          <p class="text-base text-slate-300 leading-relaxed">Notebooks locked up when multiple users attempted concurrent edits, severely impacting team velocity.</p>
+          <p class="text-base text-slate-300 leading-relaxed">Notebooks locked up when multiple users attempted
+            concurrent edits, severely impacting team velocity.</p>
         </div>
       </div>
     </div>
 
     <!-- SLIDE 4: PIVOT TO LOCAL -->
-    <div id="slide4" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-6">
+    <div id="slide4"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-6">
       <div class="text-center w-full slide-card">
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Pivot: Decoupling Logic to Local VS Code</h2>
-        <p class="text-slate-300 text-lg mt-2">Extracting code from monolithic Fabric Notebooks into modular local scripts for zero-cost cleaning, validation, and CI/CD testing.</p>
+        <p class="text-slate-300 text-lg mt-2">Extracting code from monolithic Fabric Notebooks into modular local
+          scripts for zero-cost cleaning, validation, and CI/CD testing.</p>
       </div>
       <div class="flex flex-col lg:flex-row items-stretch gap-6 w-full lg:h-[65%] mt-4">
         <!-- Before -->
-        <div class="w-full lg:w-5/12 bg-slate-900 border border-rose-900/50 rounded-2xl flex flex-col overflow-hidden opacity-80 slide-card">
+        <div
+          class="w-full lg:w-5/12 bg-slate-900 border border-rose-900/50 rounded-2xl flex flex-col overflow-hidden opacity-80 slide-card">
           <div class="bg-slate-800 border-b border-slate-700 p-3 flex items-center gap-3">
             <i class="fa-solid fa-cubes text-rose-400 text-base"></i>
-            <span class="text-xs lg:text-sm font-mono text-slate-200 font-bold">Fabric_Silver_Notebook.ipynb (Monolithic & Slow)</span>
+            <span class="text-xs lg:text-sm font-mono text-slate-200 font-bold">Fabric_Silver_Notebook.ipynb (Monolithic
+              & Slow)</span>
           </div>
           <div class="p-5 font-mono text-xs lg:text-sm text-slate-300 leading-relaxed overflow-y-auto">
             <p class="text-slate-500"># Read Data</p>
@@ -273,7 +464,8 @@
             <p>df_clean.write.format("delta").mode("overwrite").save("Tables/silver_orders")</p>
           </div>
           <div class="mt-auto bg-rose-950/40 p-4 border-t border-rose-900/50 text-center">
-            <p class="text-rose-400 text-sm font-bold"><i class="fa-solid fa-xmark mr-1"></i> Hard to test, burns cloud CU, blocking team.</p>
+            <p class="text-rose-400 text-sm font-bold"><i class="fa-solid fa-xmark mr-1"></i> Hard to test, burns cloud
+              CU, blocking team.</p>
           </div>
         </div>
         <!-- Arrow -->
@@ -282,7 +474,8 @@
           <i class="fa-solid fa-arrow-down-long text-4xl text-cyan-500 animate-pulse block lg:hidden"></i>
         </div>
         <!-- After -->
-        <div class="w-full lg:w-6/12 bg-slate-900 border border-cyan-500/50 rounded-2xl flex flex-col overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.15)] slide-card">
+        <div
+          class="w-full lg:w-6/12 bg-slate-900 border border-cyan-500/50 rounded-2xl flex flex-col overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.15)] slide-card">
           <div class="bg-slate-800 border-b border-slate-700 p-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
               <i class="fa-brands fa-python text-blue-400 text-lg"></i>
@@ -291,7 +484,8 @@
             <div class="flex gap-2 text-xs font-bold">
               <span class="bg-purple-900/50 text-purple-300 px-2.5 py-1 rounded border border-purple-500/30">Ruff</span>
               <span class="bg-blue-900/50 text-blue-300 px-2.5 py-1 rounded border border-blue-500/30">Black</span>
-              <span class="bg-emerald-900/50 text-emerald-300 px-2.5 py-1 rounded border border-emerald-500/30">Pytest</span>
+              <span
+                class="bg-emerald-900/50 text-emerald-300 px-2.5 py-1 rounded border border-emerald-500/30">Pytest</span>
             </div>
           </div>
           <div class="p-5 font-mono text-xs lg:text-sm text-slate-200 leading-relaxed overflow-y-auto">
@@ -299,10 +493,12 @@
             <p><span class="text-blue-400">def</span> <span class="text-yellow-200">clean_orders</span>(df):</p>
             <p class="ml-4">return df.dropDuplicates(["order_id"]).dropna(subset=["order_status"])</p><br>
             <p class="text-emerald-400"># 2. test_silver.py (Local Validation via Pytest)</p>
-            <p><span class="text-blue-400">def</span> <span class="text-yellow-200">test_clean_orders_uniqueness</span>():</p>
+            <p><span class="text-blue-400">def</span> <span
+                class="text-yellow-200">test_clean_orders_uniqueness</span>():</p>
             <p class="ml-4">mock_df = spark.createDataFrame(mock_data)</p>
             <p class="ml-4">result = clean_orders(mock_df)</p>
-            <p class="ml-4 text-purple-400">assert <span class="text-slate-200">result.count() == result.select("order_id").distinct().count()</span></p>
+            <p class="ml-4 text-purple-400">assert <span class="text-slate-200">result.count() ==
+                result.select("order_id").distinct().count()</span></p>
           </div>
           <div class="bg-[#0d1117] p-4 border-t border-slate-700 font-mono text-xs text-slate-300">
             <p class="text-emerald-400">➜ pytest tests/silver/ --disable-warnings</p>
@@ -314,17 +510,24 @@
     </div>
 
     <!-- SLIDE 5: DATA ARCHITECTURE RECTIFICATIONS -->
-    <div id="slide5" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-8">
+    <div id="slide5"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-8">
       <div class="text-center w-full slide-card">
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Data Architecture Rectifications</h2>
-        <p class="text-slate-300 text-lg mt-2">Solving critical business logic flaws in the Silver and Gold layers prior to BI deployment.</p>
+        <p class="text-slate-300 text-lg mt-2">Solving critical business logic flaws in the Silver and Gold layers prior
+          to BI deployment.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         <!-- Fix 1 -->
-        <div class="bg-slate-800/80 border border-slate-700 p-6 lg:p-8 rounded-2xl relative overflow-hidden group hover:border-emerald-500 transition-colors slide-card shadow-lg">
-          <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-users text-3xl text-emerald-400/30"></i></div>
+        <div
+          class="bg-slate-800/80 border border-slate-700 p-6 lg:p-8 rounded-2xl relative overflow-hidden group hover:border-emerald-500 transition-colors slide-card shadow-lg">
+          <div
+            class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-users text-3xl text-emerald-400/30"></i></div>
           <h3 class="text-emerald-400 font-bold text-xl mb-3 relative z-10">1. Customer Entity Resolution</h3>
-          <p class="text-base text-slate-200 mb-4 relative z-10 leading-relaxed">Counting transactional <code class="text-emerald-300 bg-emerald-900/40 px-1.5 py-0.5 rounded">customer_id</code> yielded ~100% false "new customers". Rectified by keying on true human entities.</p>
+          <p class="text-base text-slate-200 mb-4 relative z-10 leading-relaxed">Counting transactional <code
+              class="text-emerald-300 bg-emerald-900/40 px-1.5 py-0.5 rounded">customer_id</code> yielded ~100% false
+            "new customers". Rectified by keying on true human entities.</p>
           <div class="bg-slate-900 rounded-xl p-4 text-xs font-mono text-slate-300 border border-slate-700">
             <p class="text-emerald-400 mb-1"># Deriving True First Purchase</p>
             <p>df.groupBy("customer_unique_id") \</p>
@@ -332,10 +535,13 @@
           </div>
         </div>
         <!-- Fix 2 -->
-        <div class="bg-slate-800/80 border border-slate-700 p-6 lg:p-8 rounded-2xl relative overflow-hidden group hover:border-cyan-500 transition-colors slide-card shadow-lg">
-          <div class="absolute -right-4 -top-4 w-24 h-24 bg-cyan-500/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-tags text-3xl text-cyan-400/30"></i></div>
+        <div
+          class="bg-slate-800/80 border border-slate-700 p-6 lg:p-8 rounded-2xl relative overflow-hidden group hover:border-cyan-500 transition-colors slide-card shadow-lg">
+          <div class="absolute -right-4 -top-4 w-24 h-24 bg-cyan-500/10 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-tags text-3xl text-cyan-400/30"></i></div>
           <h3 class="text-cyan-400 font-bold text-xl mb-3 relative z-10">2. Real Discount Derivation</h3>
-          <p class="text-base text-slate-200 mb-4 relative z-10 leading-relaxed">Raw data lacked discount metrics. Rectified by calculating event prices against a pre-event baseline median per product.</p>
+          <p class="text-base text-slate-200 mb-4 relative z-10 leading-relaxed">Raw data lacked discount metrics.
+            Rectified by calculating event prices against a pre-event baseline median per product.</p>
           <div class="bg-slate-900 rounded-xl p-4 text-xs font-mono text-slate-300 border border-slate-700">
             <p class="text-cyan-400 mb-1"># Mathematical Discount Check</p>
             <p>df_event.join(df_baseline, "product_id") \</p>
@@ -343,10 +549,13 @@
           </div>
         </div>
         <!-- Fix 3 -->
-        <div class="bg-slate-800/80 border border-slate-700 p-6 lg:p-8 rounded-2xl relative overflow-hidden group hover:border-amber-500 transition-colors slide-card shadow-lg">
-          <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-code-branch text-3xl text-amber-400/30"></i></div>
+        <div
+          class="bg-slate-800/80 border border-slate-700 p-6 lg:p-8 rounded-2xl relative overflow-hidden group hover:border-amber-500 transition-colors slide-card shadow-lg">
+          <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-code-branch text-3xl text-amber-400/30"></i></div>
           <h3 class="text-amber-400 font-bold text-xl mb-3 relative z-10">3. Preventing Revenue Fan-Out</h3>
-          <p class="text-base text-slate-200 mb-4 relative z-10 leading-relaxed">Joining payments and items directly to orders caused silent 2x-5x revenue inflation via Cartesian products.</p>
+          <p class="text-base text-slate-200 mb-4 relative z-10 leading-relaxed">Joining payments and items directly to
+            orders caused silent 2x-5x revenue inflation via Cartesian products.</p>
           <div class="bg-slate-900 rounded-xl p-4 text-xs font-mono text-slate-300 border border-slate-700">
             <p class="text-amber-400 mb-1"># Decoupling Facts (Gold Layer)</p>
             <p>df_payments.groupBy("order_id") \</p>
@@ -357,31 +566,38 @@
     </div>
 
     <!-- SLIDE 6: THE INTEGRATION BLOCKER -->
-    <div id="slide6" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-5xl mx-auto space-y-8">
+    <div id="slide6"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-5xl mx-auto space-y-8">
       <div class="text-center slide-card">
-        <div class="inline-block bg-rose-500/20 text-rose-400 px-5 py-1.5 rounded-full text-xs lg:text-sm font-black uppercase tracking-widest mb-4 border border-rose-500/50">
+        <div
+          class="inline-block bg-rose-500/20 text-rose-400 px-5 py-1.5 rounded-full text-xs lg:text-sm font-black uppercase tracking-widest mb-4 border border-rose-500/50">
           <i class="fa-solid fa-ban mr-2"></i> The Sync Dilemma
         </div>
         <h2 class="text-4xl lg:text-5xl font-black text-slate-100">The Integration Gap</h2>
-        <p class="text-rose-200 mt-3 text-xl">Local code was fast, but deploying it automatically to the Fabric Pipeline was blocked.</p>
+        <p class="text-rose-200 mt-3 text-xl">Local code was fast, but deploying it automatically to the Fabric Pipeline
+          was blocked.</p>
       </div>
       <div class="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 w-full mt-6 slide-card">
         <div class="w-64 flex flex-col items-center text-center space-y-4">
-          <div class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center border-4 border-slate-600 text-4xl">
+          <div
+            class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center border-4 border-slate-600 text-4xl">
             <i class="fa-brands fa-github text-slate-200"></i>
           </div>
           <h3 class="font-bold text-slate-100 text-xl">GitHub (Local)</h3>
         </div>
         <div class="flex flex-col items-center gap-4 relative">
-          <div class="flex items-center text-rose-400 bg-rose-950/50 px-5 py-3 rounded-xl border border-rose-800 text-base font-bold">
+          <div
+            class="flex items-center text-rose-400 bg-rose-950/50 px-5 py-3 rounded-xl border border-rose-800 text-base font-bold">
             <i class="fa-solid fa-xmark mr-3 text-2xl"></i> Native Git Sync Blocked (No Admin)
           </div>
-          <div class="flex items-center text-rose-400 bg-rose-950/50 px-5 py-3 rounded-xl border border-rose-800 text-base font-bold">
+          <div
+            class="flex items-center text-rose-400 bg-rose-950/50 px-5 py-3 rounded-xl border border-rose-800 text-base font-bold">
             <i class="fa-solid fa-xmark mr-3 text-2xl"></i> REST API Upload (401/404 Errors)
           </div>
         </div>
         <div class="w-64 flex flex-col items-center text-center space-y-4">
-          <div class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center border-4 border-cyan-600 text-4xl pulse-glow">
+          <div
+            class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center border-4 border-cyan-600 text-4xl pulse-glow">
             <i class="fa-solid fa-database text-cyan-400"></i>
           </div>
           <h3 class="font-bold text-slate-100 text-xl">Fabric Pipeline</h3>
@@ -390,9 +606,12 @@
     </div>
 
     <!-- SLIDE 7: THE PIVOT SOLUTION -->
-    <div id="slide7" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto space-y-6">
-      <h2 class="text-3xl lg:text-4xl font-black text-slate-100 text-center slide-card">Automating the Trigger via Service Principal</h2>
-      <p class="text-slate-300 text-lg text-center slide-card">Since direct deployment failed, we built a GitHub Actions workflow to update a trigger state.</p>
+    <div id="slide7"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto space-y-6">
+      <h2 class="text-3xl lg:text-4xl font-black text-slate-100 text-center slide-card">Automating the Trigger via
+        Service Principal</h2>
+      <p class="text-slate-300 text-lg text-center slide-card">Since direct deployment failed, we built a GitHub Actions
+        workflow to update a trigger state.</p>
       <div class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-xl relative mt-4 slide-card">
         <div class="flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
           <div class="bg-slate-800 p-6 rounded-2xl border border-blue-500/50 w-full md:w-1/3 text-center">
@@ -400,33 +619,43 @@
             <h4 class="text-slate-100 font-bold text-lg">1. PR Merged</h4>
             <p class="text-sm text-slate-300 mt-2">Code passes tests and merges to Main.</p>
           </div>
-          <div class="text-slate-600 text-3xl"><i class="fa-solid fa-arrow-right-long animate-pulse hidden md:block"></i><i class="fa-solid fa-arrow-down-long animate-pulse block md:hidden"></i></div>
+          <div class="text-slate-600 text-3xl"><i
+              class="fa-solid fa-arrow-right-long animate-pulse hidden md:block"></i><i
+              class="fa-solid fa-arrow-down-long animate-pulse block md:hidden"></i></div>
           <div class="bg-slate-800 p-6 rounded-2xl border border-indigo-500/50 w-full md:w-1/3 text-center">
             <i class="fa-solid fa-robot text-4xl text-indigo-400 mb-3"></i>
             <h4 class="text-slate-100 font-bold text-lg">2. Auth via SP</h4>
             <p class="text-sm text-slate-300 mt-2">GitHub Actions authenticates to Azure via Service Principal.</p>
           </div>
-          <div class="text-slate-600 text-3xl"><i class="fa-solid fa-arrow-right-long animate-pulse hidden md:block"></i><i class="fa-solid fa-arrow-down-long animate-pulse block md:hidden"></i></div>
+          <div class="text-slate-600 text-3xl"><i
+              class="fa-solid fa-arrow-right-long animate-pulse hidden md:block"></i><i
+              class="fa-solid fa-arrow-down-long animate-pulse block md:hidden"></i></div>
           <div class="bg-slate-800 p-6 rounded-2xl border border-purple-500/50 w-full md:w-1/3 text-center pulse-glow">
             <i class="fa-solid fa-clock-rotate-left text-4xl text-purple-400 mb-3"></i>
             <h4 class="text-slate-100 font-bold text-lg">3. Update Trigger</h4>
-            <p class="text-sm text-slate-300 mt-2">REST API safely updates a timestamp in a specific Fabric Notebook.</p>
+            <p class="text-sm text-slate-300 mt-2">REST API safely updates a timestamp in a specific Fabric Notebook.
+            </p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- SLIDE 8: THE ORCHESTRATION -->
-    <div id="slide8" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto space-y-6">
+    <div id="slide8"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto space-y-6">
       <h2 class="text-3xl lg:text-4xl font-black text-slate-100 text-center slide-card">The Power Automate Webhook</h2>
-      <p class="text-slate-300 text-lg text-center slide-card">Bridging the final gap: Event-driven orchestration with zero manual intervention.</p>
-      <div class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-xl mt-4 flex flex-col lg:flex-row items-center justify-between gap-8 slide-card">
+      <p class="text-slate-300 text-lg text-center slide-card">Bridging the final gap: Event-driven orchestration with
+        zero manual intervention.</p>
+      <div
+        class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-8 shadow-xl mt-4 flex flex-col lg:flex-row items-center justify-between gap-8 slide-card">
         <div class="w-full lg:w-5/12 space-y-4">
           <h3 class="text-cyan-400 font-bold text-xl">Webhook Orchestration</h3>
           <p class="text-base text-slate-200 leading-relaxed">
-            Power Automate constantly monitors the "Trigger Notebook" updated by GitHub. When a change is detected, it fires an HTTP Webhook directly to the Fabric API, initiating the full Medallion Pipeline run automatically.
+            Power Automate constantly monitors the "Trigger Notebook" updated by GitHub. When a change is detected, it
+            fires an HTTP Webhook directly to the Fabric API, initiating the full Medallion Pipeline run automatically.
           </p>
-          <div class="bg-emerald-900/30 border border-emerald-500/30 p-4 rounded-xl text-emerald-400 text-sm font-mono space-y-1">
+          <div
+            class="bg-emerald-900/30 border border-emerald-500/30 p-4 rounded-xl text-emerald-400 text-sm font-mono space-y-1">
             <div><i class="fa-solid fa-check-circle mr-2"></i> Resilient Event-Driven SLA</div>
             <div><i class="fa-solid fa-check-circle mr-2"></i> Bypasses Trial Admin Restrictions</div>
           </div>
@@ -444,7 +673,8 @@
             </div>
             <i class="fa-solid fa-arrow-right text-cyan-500 text-xl"></i>
             <div class="flex-1">
-              <i class="fa-solid fa-gears text-4xl text-amber-400 mb-3 animate-spin-slow" style="animation-duration: 4s;"></i>
+              <i class="fa-solid fa-gears text-4xl text-amber-400 mb-3 animate-spin-slow"
+                style="animation-duration: 4s;"></i>
               <p class="text-sm text-slate-200 font-bold">Pipeline Runs</p>
             </div>
           </div>
@@ -453,133 +683,308 @@
     </div>
 
     <!-- SLIDE 9: END TO END ARCHITECTURE -->
-    <div id="slide9" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-6">
-      <h2 class="text-3xl lg:text-4xl font-black text-slate-100 text-center mb-2 slide-card">Complete End-to-End Architecture</h2>
-      <div class="w-full bg-slate-900/90 border border-slate-700 rounded-2xl p-8 shadow-2xl relative slide-card">
-        <div class="absolute inset-0 top-1/2 h-1 -translate-y-1/2 animate-flow-h opacity-30 pointer-events-none"></div>
-        <div class="flex flex-col md:flex-row justify-between items-center relative z-10 w-full gap-6 md:gap-2">
-          <div class="flex flex-col items-center w-full md:w-1/5 text-center">
-            <div class="w-16 h-16 bg-slate-800 border-2 border-blue-500 rounded-full flex items-center justify-center text-blue-400 text-2xl shadow-[0_0_15px_rgba(59,130,246,0.5)] mb-3"><i class="fa-brands fa-github"></i></div>
-            <h4 class="text-slate-100 font-bold text-sm">Local Dev</h4>
-            <p class="text-xs text-slate-400 mt-1">VS Code & Pytest</p>
+    <div id="slide9"
+      class="scene-element self-start w-full h-auto flex flex-col items-center justify-start pt-16 max-w-7xl mx-auto space-y-3">
+      <div class="text-center slide-card">
+        <p class="text-cyan-300 font-mono text-xs uppercase tracking-[0.25em] mb-2">Separate environments • connected handoffs</p>
+        <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Complete End-to-End Architecture</h2>
+      </div>
+      <div id="pipelineFlow" class="w-full rounded-2xl border border-slate-700 bg-slate-950/90 p-3 lg:p-4 shadow-2xl relative slide-card">
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-2 px-1">
+          <p class="text-[9px] font-semibold text-slate-300">
+            <span class="text-cyan-300 mr-2"><i class="fa-solid fa-circle mr-1"></i>FABRIC</span>
+            <span class="text-violet-300 mr-2"><i class="fa-solid fa-circle mr-1"></i>LOCAL VS CODE</span>
+            <span class="text-indigo-300"><i class="fa-solid fa-circle mr-1"></i>GITHUB / CI</span>
+          </p>
+          <p class="text-[9px] text-slate-500 font-mono">FOLLOW THE GLOW: CYAN = FABRIC • VIOLET = LOCAL</p>
+        </div>
+        <span id="pipelineFabricDot" class="pipeline-neon-dot pipeline-neon-fabric" aria-hidden="true"></span>
+        <span id="pipelineLocalDot" class="pipeline-neon-dot pipeline-neon-local" aria-hidden="true"></span>
+        <div class="relative z-10">
+          <div class="grid grid-cols-2 gap-2 mb-1">
+            <div class="rounded-lg border border-violet-400 bg-violet-600/25 px-2 py-1 text-center text-[10px] font-black tracking-[0.18em] text-violet-200">
+              <i class="fa-solid fa-laptop-code mr-1"></i>LOCAL WORKSTATION
+            </div>
+            <div class="rounded-lg border border-cyan-400 bg-cyan-600/25 px-2 py-1 text-center text-[10px] font-black tracking-[0.18em] text-cyan-200">
+              <i class="fa-solid fa-cloud mr-1"></i>MICROSOFT FABRIC
+            </div>
           </div>
-          <div class="flex flex-col items-center w-full md:w-1/5 text-center">
-            <div class="w-16 h-16 bg-slate-800 border-2 border-indigo-500 rounded-full flex items-center justify-center text-indigo-400 text-2xl shadow-[0_0_15px_rgba(99,102,241,0.5)] mb-3"><i class="fa-solid fa-robot"></i></div>
-            <h4 class="text-slate-100 font-bold text-sm">CI/CD</h4>
-            <p class="text-xs text-slate-400 mt-1">Actions + Service Principal</p>
+          <div class="pipeline-columns relative grid grid-cols-2 gap-4">
+          <div class="pipeline-env-divider" aria-hidden="true"></div>
+          <section class="min-w-0 self-start rounded-xl border-2 border-violet-500/80 bg-violet-950/40 p-1.5">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="rounded bg-violet-500/20 px-2 py-0.5 text-[9px] font-black tracking-widest text-violet-300">LOCAL • DATA INTAKE</span>
+              <span class="text-[9px] text-violet-200/70">Download the source files to your workstation</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <article data-pipeline-step="1" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-violet-400/60 bg-slate-900/95 px-2 py-1 text-center">
+                <span class="text-[8px] font-mono text-violet-300">01 • SOURCE</span><h3 class="text-[10px] font-bold text-slate-100"><i class="fa-solid fa-globe mr-1 text-violet-300"></i>Kaggle Olist</h3><p class="text-[8px] text-slate-400">Download raw CSVs locally</p>
+              </article>
+              <article data-pipeline-step="2" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-violet-400/60 bg-slate-900/95 px-2 py-1 text-center">
+                <span class="text-[8px] font-mono text-violet-300">02 • STAGE</span><h3 class="text-[10px] font-bold text-slate-100"><i class="fa-solid fa-folder-open mr-1 text-violet-300"></i>Local raw files</h3><p class="text-[8px] text-slate-400">Ready for Lakehouse upload</p>
+              </article>
+            </div>
+          </section>
+          <section class="min-w-0 self-start rounded-xl border-2 border-cyan-500/80 bg-cyan-950/35 p-1.5">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="rounded bg-cyan-500/20 px-2 py-0.5 text-[9px] font-black tracking-widest text-cyan-300">FABRIC • BRONZE → SILVER HANDOFF</span>
+              <span class="text-[9px] text-cyan-100/70">Silver notebook pauses while local Silver code is prepared</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <article data-pipeline-step="3" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">03 • ONELAKE</span><h3 class="text-[10px] font-bold text-slate-100">Upload raw CSVs</h3><p class="text-[8px] text-slate-400">Files/bronze/</p>
+              </article>
+              <article data-pipeline-step="4" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">04 • BRONZE NOTEBOOK</span><h3 class="text-[10px] font-bold text-slate-100">Extract CSVs</h3><p class="text-[8px] text-slate-400">Ingest into Delta</p>
+              </article>
+              <article data-pipeline-step="5" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-emerald-500/50 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-emerald-300">05 • BRONZE STORE</span><h3 class="text-[10px] font-bold text-slate-100">bronze dbo</h3><p class="text-[8px] text-slate-400">Raw Delta tables</p>
+              </article>
+              <article data-pipeline-step="6" class="pipeline-card-glow flex min-h-[58px] flex-col justify-center rounded-lg border border-rose-400/80 bg-rose-950/50 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-rose-300">06 • FABRIC PAUSE</span><h3 class="text-[10px] font-bold text-slate-100"><i class="fa-solid fa-pause mr-1 text-rose-300"></i>Silver notebook waits</h3><p class="text-[8px] text-slate-300">Waiting on tested source</p>
+              </article>
+            </div>
+          </section>
+          <section class="min-w-0 self-start rounded-xl border-2 border-violet-500/80 bg-violet-950/40 p-1.5">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="rounded bg-violet-500/20 px-2 py-0.5 text-[9px] font-black tracking-widest text-violet-300">LOCAL • SILVER CODE + RELEASE</span>
+              <span class="text-[9px] text-violet-200/70">Violet dot takes over during the Fabric pause</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <article data-pipeline-step="7" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-violet-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-violet-300">07 • VS CODE</span><h3 class="text-[10px] font-bold text-slate-100">Build clean + validate</h3><p class="text-[8px] text-slate-400">clean.py · validate.py · test.py</p>
+              </article>
+              <article data-pipeline-step="8" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-violet-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-violet-300">08 • GIT</span><h3 class="text-[10px] font-bold text-slate-100">Push Silver code</h3><p class="text-[8px] text-slate-400">Commit and push changes</p>
+              </article>
+              <article data-pipeline-step="9" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-indigo-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-indigo-300">09 • CI/CD</span><h3 class="text-[10px] font-bold text-slate-100">GitHub Actions</h3><p class="text-[8px] text-slate-400">Run pytest gate</p>
+              </article>
+              <article data-pipeline-step="10" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-indigo-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-indigo-300">10 • GITHUB</span><h3 class="text-[10px] font-bold text-slate-100">Publish tested src</h3><p class="text-[8px] text-slate-400">Repository source files</p>
+              </article>
+            </div>
+          </section>
+          <section class="min-w-0 self-start rounded-xl border-2 border-cyan-500/80 bg-cyan-950/35 p-1.5">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="rounded bg-cyan-500/20 px-2 py-0.5 text-[9px] font-black tracking-widest text-cyan-300">FABRIC • SILVER → GOLD HANDOFF</span>
+              <span class="text-[9px] text-cyan-100/70">Fabric API fetches tested code; notebook runs, stores and checks Silver</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <article data-pipeline-step="11" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">11 • API</span><h3 class="text-[9px] font-bold text-slate-100">Trigger notebook</h3><p class="text-[8px] text-slate-400">Fabric API</p>
+              </article>
+              <article data-pipeline-step="12" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">12 • SYNC SRC</span><h3 class="text-[9px] font-bold text-slate-100">Fetch from GitHub</h3><p class="text-[8px] text-slate-400">OneLake Files/src/</p>
+              </article>
+              <article data-pipeline-step="13" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">13 • SILVER RUN</span><h3 class="text-[9px] font-bold text-slate-100">Use tested modules</h3><p class="text-[8px] text-slate-400">Clean + validate bronze</p>
+              </article>
+              <article data-pipeline-step="14" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-emerald-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-emerald-300">14 • SILVER STORE</span><h3 class="text-[9px] font-bold text-slate-100">silver dbo</h3><p class="text-[8px] text-slate-400">Clean Delta tables</p>
+              </article>
+              <article data-pipeline-step="15" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-orange-400/60 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-orange-300">15 • OBSERVE</span><h3 class="text-[9px] font-bold text-slate-100">Logs + DQ</h3><p class="text-[8px] text-slate-400">Check Silver output</p>
+              </article>
+              <article data-pipeline-step="16" class="pipeline-card-glow flex min-h-[58px] flex-col justify-center rounded-lg border border-rose-400/80 bg-rose-950/50 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-rose-300">16 • FABRIC PAUSE</span><h3 class="text-[9px] font-bold text-slate-100"><i class="fa-solid fa-pause mr-1 text-rose-300"></i>Gold waits</h3><p class="text-[8px] text-slate-300">Await tested Gold code</p>
+              </article>
+            </div>
+          </section>
+          <section class="min-w-0 self-start rounded-xl border-2 border-violet-500/80 bg-violet-950/40 p-1.5">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="rounded bg-violet-500/20 px-2 py-0.5 text-[9px] font-black tracking-widest text-violet-300">LOCAL • GOLD CODE + RELEASE</span>
+              <span class="text-[9px] text-violet-200/70">Violet dot returns for the second tested code release</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <article data-pipeline-step="17" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-violet-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-violet-300">17 • VS CODE</span><h3 class="text-[10px] font-bold text-slate-100">Build Gold logic</h3><p class="text-[8px] text-slate-400">clean.py · validate.py · test.py</p>
+              </article>
+              <article data-pipeline-step="18" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-violet-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-violet-300">18 • GIT</span><h3 class="text-[10px] font-bold text-slate-100">Push Gold code</h3><p class="text-[8px] text-slate-400">Commit and push changes</p>
+              </article>
+              <article data-pipeline-step="19" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-indigo-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-indigo-300">19 • CI/CD</span><h3 class="text-[10px] font-bold text-slate-100">GitHub Actions</h3><p class="text-[8px] text-slate-400">Run pytest gate</p>
+              </article>
+              <article data-pipeline-step="20" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-indigo-400/60 bg-slate-900/95 px-1.5 py-1 text-center">
+                <span class="text-[8px] font-mono text-indigo-300">20 • GITHUB</span><h3 class="text-[10px] font-bold text-slate-100">Publish tested src</h3><p class="text-[8px] text-slate-400">Repository source files</p>
+              </article>
+            </div>
+          </section>
+          <section class="min-w-0 self-start rounded-xl border-2 border-cyan-500/80 bg-cyan-950/35 p-1.5">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="rounded bg-cyan-500/20 px-2 py-0.5 text-[9px] font-black tracking-widest text-cyan-300">FABRIC • GOLD → POWER BI</span>
+              <span class="text-[9px] text-cyan-100/70">Run Gold from tested src, validate, then serve the model</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <article data-pipeline-step="21" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">21 • API + SYNC</span><h3 class="text-[9px] font-bold text-slate-100">Trigger + fetch src</h3><p class="text-[8px] text-slate-400">GitHub → OneLake</p>
+              </article>
+              <article data-pipeline-step="22" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-cyan-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-cyan-300">22 • GOLD NOTEBOOK</span><h3 class="text-[9px] font-bold text-slate-100">Aggregate Silver</h3><p class="text-[8px] text-slate-400">Run tested Gold logic</p>
+              </article>
+              <article data-pipeline-step="23" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-emerald-500/50 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-emerald-300">23 • GOLD STORE</span><h3 class="text-[9px] font-bold text-slate-100">gold_dbo</h3><p class="text-[8px] text-slate-400">Gold Delta tables</p>
+              </article>
+              <article data-pipeline-step="24" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-orange-400/60 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-orange-300">24 • OBSERVE</span><h3 class="text-[9px] font-bold text-slate-100">Logs + DQ</h3><p class="text-[8px] text-slate-400">Validate Gold output</p>
+              </article>
+              <article data-pipeline-step="25" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-sky-400/60 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-sky-300">25 • SEMANTIC MODEL</span><h3 class="text-[9px] font-bold text-slate-100">Model + DAX</h3><p class="text-[8px] text-slate-400">Measures over Gold</p>
+              </article>
+              <article data-pipeline-step="26" class="flex min-h-[58px] flex-col justify-center rounded-lg border border-yellow-400/60 bg-slate-900/95 px-1 py-1 text-center">
+                <span class="text-[8px] font-mono text-yellow-300">26 • POWER BI</span><h3 class="text-[9px] font-bold text-slate-100">Direct Lake dashboard</h3><p class="text-[8px] text-slate-400">Insight delivered</p>
+              </article>
+            </div>
+          </section>
           </div>
-          <div class="flex flex-col items-center w-full md:w-1/5 text-center">
-            <div class="w-16 h-16 bg-slate-800 border-2 border-cyan-500 rounded-full flex items-center justify-center text-cyan-400 text-2xl shadow-[0_0_15px_rgba(6,182,212,0.5)] mb-3"><i class="fa-solid fa-bolt"></i></div>
-            <h4 class="text-slate-100 font-bold text-sm">Power Automate</h4>
-            <p class="text-xs text-slate-400 mt-1">Webhook Trigger</p>
-          </div>
-          <div class="flex flex-col items-center w-full md:w-1/5 text-center">
-            <div class="w-16 h-16 bg-slate-800 border-2 border-amber-500 rounded-full flex items-center justify-center text-amber-400 text-2xl shadow-[0_0_15px_rgba(245,158,11,0.5)] mb-3 pulse-glow"><i class="fa-solid fa-cubes"></i></div>
-            <h4 class="text-slate-100 font-bold text-sm">Fabric Medallion</h4>
-            <p class="text-xs text-slate-400 mt-1">Bronze > Silver > Gold</p>
-          </div>
-          <div class="flex flex-col items-center w-full md:w-1/5 text-center">
-            <div class="w-16 h-16 bg-slate-800 border-2 border-yellow-400 rounded-full flex items-center justify-center text-yellow-400 text-2xl shadow-[0_0_15px_rgba(250,204,21,0.5)] mb-3"><i class="fa-solid fa-chart-column"></i></div>
-            <h4 class="text-slate-100 font-bold text-sm">Power BI</h4>
-            <p class="text-xs text-slate-400 mt-1">Direct Lake Dashboard</p>
-          </div>
+        </div>
+        <div class="mt-2 flex items-center justify-center gap-2 rounded-lg border border-slate-700/80 bg-slate-900/70 px-3 py-1.5 text-center">
+          <i class="fa-solid fa-circle-info text-cyan-300 text-xs"></i>
+          <p class="text-[9px] leading-relaxed text-slate-300"><strong class="text-rose-300">At each handoff, Fabric pauses:</strong>
+            local code → Git push → Actions/pytest → Fabric API → GitHub source synced to OneLake <code>Files/src/</code> → notebook resumes.
+            <span class="text-slate-500">dbo is the schema; Delta is the table format.</span></p>
         </div>
       </div>
     </div>
 
     <!-- SLIDE 10: ARCHITECTURAL TRADE-OFFS -->
-    <div id="slide10" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-6">
+    <div id="slide10"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-6">
       <div class="text-center w-full slide-card">
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Architectural Reality Check</h2>
-        <p class="text-slate-300 text-lg mt-2">Framing workarounds not as mistakes, but as resilient problem-solving under trial constraints.</p>
+        <p class="text-slate-300 text-lg mt-2">Framing workarounds not as mistakes, but as resilient problem-solving
+          under trial constraints.</p>
       </div>
-      
+
       <div class="w-full bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl mt-4 slide-card">
         <!-- Table Header -->
         <div class="flex border-b border-slate-700 bg-slate-800/80">
-          <div class="w-1/4 p-4 text-slate-300 font-bold text-sm uppercase tracking-wider border-r border-slate-700 flex items-center">Architecture Dimension</div>
-          <div class="w-[37.5%] p-4 text-rose-300 font-bold text-sm text-center border-r border-slate-700"><i class="fa-solid fa-screwdriver-wrench mr-2"></i> Our Trial Workaround</div>
-          <div class="w-[37.5%] p-4 text-emerald-400 font-bold text-sm text-center"><i class="fa-solid fa-building-shield mr-2"></i> The Enterprise Standard</div>
+          <div
+            class="w-1/4 p-4 text-slate-300 font-bold text-sm uppercase tracking-wider border-r border-slate-700 flex items-center">
+            Architecture Dimension</div>
+          <div class="w-[37.5%] p-4 text-rose-300 font-bold text-sm text-center border-r border-slate-700"><i
+              class="fa-solid fa-screwdriver-wrench mr-2"></i> Our Trial Workaround</div>
+          <div class="w-[37.5%] p-4 text-emerald-400 font-bold text-sm text-center"><i
+              class="fa-solid fa-building-shield mr-2"></i> The Enterprise Standard</div>
         </div>
-        
+
         <!-- Rows -->
         <div class="flex border-b border-slate-700/50 hover:bg-slate-800/40 transition-colors">
-          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Code Deployment</div>
-          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Dynamic raw download (<code class="bg-slate-800 text-rose-300 px-1.5 py-0.5 rounded">.py</code>) from GitHub inside pipeline.</div>
-          <div class="w-[37.5%] p-4 text-slate-200 text-sm">Pre-packaged <code class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded">.whl</code> or <code class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded">.egg</code> libraries installed natively in Databricks/Fabric.</div>
+          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Code
+            Deployment</div>
+          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Dynamic raw download (<code
+              class="bg-slate-800 text-rose-300 px-1.5 py-0.5 rounded">.py</code>) from GitHub inside pipeline.</div>
+          <div class="w-[37.5%] p-4 text-slate-200 text-sm">Pre-packaged <code
+              class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded">.whl</code> or <code
+              class="bg-slate-800 text-emerald-300 px-1.5 py-0.5 rounded">.egg</code> libraries installed natively in
+            Databricks/Fabric.</div>
         </div>
         <div class="flex border-b border-slate-700/50 hover:bg-slate-800/40 transition-colors">
-          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Orchestration Trigger</div>
-          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Power Automate Webhook via HTTP POST.</div>
-          <div class="w-[37.5%] p-4 text-slate-200 text-sm">Azure DevOps / Fabric REST API via properly scoped Service Principal.</div>
+          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">
+            Orchestration Trigger</div>
+          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Power Automate Webhook via HTTP
+            POST.</div>
+          <div class="w-[37.5%] p-4 text-slate-200 text-sm">Azure DevOps / Fabric REST API via properly scoped Service
+            Principal.</div>
         </div>
         <div class="flex border-b border-slate-700/50 hover:bg-slate-800/40 transition-colors">
-          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Security & Auth</div>
-          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Personal Access Tokens (PATs) and exposed Webhook URLs.</div>
-          <div class="w-[37.5%] p-4 text-slate-200 text-sm">Managed Identities and strict Role-Based Access Control (RBAC).</div>
+          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Security
+            & Auth</div>
+          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Personal Access Tokens (PATs) and
+            exposed Webhook URLs.</div>
+          <div class="w-[37.5%] p-4 text-slate-200 text-sm">Managed Identities and strict Role-Based Access Control
+            (RBAC).</div>
         </div>
         <div class="flex hover:bg-slate-800/40 transition-colors">
-          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Quality Gates</div>
-          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Local Pytest bypasses artifact generation entirely.</div>
-          <div class="w-[37.5%] p-4 text-slate-200 text-sm">CI/CD requires test artifacts, central logs, and formal rollback provisions.</div>
+          <div class="w-1/4 p-4 text-slate-200 text-base font-bold flex items-center border-r border-slate-700">Quality
+            Gates</div>
+          <div class="w-[37.5%] p-4 text-slate-300 text-sm border-r border-slate-700">Local Pytest bypasses artifact
+            generation entirely.</div>
+          <div class="w-[37.5%] p-4 text-slate-200 text-sm">CI/CD requires test artifacts, central logs, and formal
+            rollback provisions.</div>
         </div>
       </div>
     </div>
 
     <!-- SLIDE 11: DATA ASSURANCE -->
-    <div id="slide11" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto space-y-8">
+    <div id="slide11"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto space-y-8">
       <div class="text-center w-full slide-card">
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Quality Assurance & Ruthless Prioritization</h2>
-        <p class="text-slate-300 text-lg mt-2">Ensuring code correctness while aggressively scoping out low-value data to respect compute limits.</p>
+        <p class="text-slate-300 text-lg mt-2">Ensuring code correctness while aggressively scoping out low-value data
+          to respect compute limits.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-        <div class="bg-slate-800/60 border border-blue-500/30 p-8 rounded-2xl relative overflow-hidden group slide-card shadow-lg">
-          <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full flex items-start justify-end p-4"><i class="fa-solid fa-vial-circle-check text-2xl text-blue-400"></i></div>
+        <div
+          class="bg-slate-800/60 border border-blue-500/30 p-8 rounded-2xl relative overflow-hidden group slide-card shadow-lg">
+          <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-bl-full flex items-start justify-end p-4">
+            <i class="fa-solid fa-vial-circle-check text-2xl text-blue-400"></i></div>
           <h3 class="text-blue-400 font-bold text-xl mb-4">1. Pre-Deployment</h3>
-          <p class="text-base text-slate-200 leading-relaxed">Repeatable pull-request checks via Pytest before code touches the cloud environment.</p>
+          <p class="text-base text-slate-200 leading-relaxed">Repeatable pull-request checks via Pytest before code
+            touches the cloud environment.</p>
         </div>
-        <div class="bg-slate-800/60 border border-purple-500/30 p-8 rounded-2xl relative overflow-hidden slide-card shadow-lg">
-          <div class="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-bl-full flex items-start justify-end p-4"><i class="fa-solid fa-magnifying-glass-chart text-2xl text-purple-400"></i></div>
+        <div
+          class="bg-slate-800/60 border border-purple-500/30 p-8 rounded-2xl relative overflow-hidden slide-card shadow-lg">
+          <div
+            class="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-bl-full flex items-start justify-end p-4">
+            <i class="fa-solid fa-magnifying-glass-chart text-2xl text-purple-400"></i></div>
           <h3 class="text-purple-400 font-bold text-xl mb-4">2. Cloud Data Profiling</h3>
-          <p class="text-base text-slate-200 leading-relaxed">Validating actual outputs in Fabric (Data Quality circuit breakers, row counts, null checks).</p>
+          <p class="text-base text-slate-200 leading-relaxed">Validating actual outputs in Fabric (Data Quality circuit
+            breakers, row counts, null checks).</p>
         </div>
-        <div class="bg-slate-800/60 border border-rose-500/30 p-8 rounded-2xl relative overflow-hidden slide-card shadow-lg">
-          <div class="absolute top-0 right-0 w-20 h-20 bg-rose-500/10 rounded-bl-full flex items-start justify-end p-4"><i class="fa-solid fa-scissors text-2xl text-rose-400"></i></div>
+        <div
+          class="bg-slate-800/60 border border-rose-500/30 p-8 rounded-2xl relative overflow-hidden slide-card shadow-lg">
+          <div class="absolute top-0 right-0 w-20 h-20 bg-rose-500/10 rounded-bl-full flex items-start justify-end p-4">
+            <i class="fa-solid fa-scissors text-2xl text-rose-400"></i></div>
           <h3 class="text-rose-400 font-bold text-xl mb-4">3. Strategic Exclusions</h3>
-          <p class="text-base text-slate-200 leading-relaxed">Dropped <code class="text-rose-300 bg-rose-900/40 px-1.5 py-0.5 rounded text-sm">dim_geolocation</code> and ignored heavy NLP review text to guarantee pipeline stability.</p>
+          <p class="text-base text-slate-200 leading-relaxed">Dropped <code
+              class="text-rose-300 bg-rose-900/40 px-1.5 py-0.5 rounded text-sm">dim_geolocation</code> and ignored
+            heavy NLP review text to guarantee pipeline stability.</p>
         </div>
       </div>
     </div>
 
     <!-- SLIDE 12: COMPLETION & DASHBOARD -->
-    <div id="slide12" class="scene-element w-full h-full flex flex-col lg:flex-row items-center justify-center max-w-7xl mx-auto gap-8 lg:gap-12">
-      <div class="w-full lg:w-7/12 bg-slate-900 border-2 border-amber-500/40 p-6 rounded-2xl shadow-2xl pulse-glow slide-card">
+    <div id="slide12"
+      class="scene-element w-full h-full flex flex-col lg:flex-row items-center justify-center max-w-7xl mx-auto gap-8 lg:gap-12">
+      <div
+        class="w-full lg:w-7/12 bg-slate-900 border-2 border-amber-500/40 p-6 rounded-2xl shadow-2xl pulse-glow slide-card">
         <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-chart-column text-amber-400 text-2xl"></i>
             <h3 class="text-slate-100 font-bold text-lg">Power BI Direct Lake Report</h3>
           </div>
-          <span class="text-xs font-bold bg-amber-900/50 text-amber-200 px-3 py-1 rounded-full border border-amber-700">Dashboard Preview</span>
+          <span
+            class="text-xs font-bold bg-amber-900/50 text-amber-200 px-3 py-1 rounded-full border border-amber-700">Dashboard
+            Preview</span>
         </div>
-        <img src="dashboard.png" alt="Power BI dashboard report" class="block w-full h-auto max-h-[55vh] object-contain rounded-lg">
+        <img src="dashboard.png" alt="Power BI dashboard report"
+          class="block w-full h-auto max-h-[55vh] object-contain rounded-lg">
       </div>
       <div class="w-full lg:w-5/12 space-y-6 slide-card">
         <h2 class="text-4xl lg:text-5xl font-black text-slate-100 leading-tight">Business Value Delivered</h2>
-        <p class="text-slate-300 text-xl leading-relaxed">We successfully transformed 9 chaotic tables into an automated, interactive intelligence asset, definitively answering the Black Friday hypotheses.</p>
+        <p class="text-slate-300 text-xl leading-relaxed">We successfully transformed 9 chaotic tables into an
+          automated, interactive intelligence asset, definitively answering the Black Friday hypotheses.</p>
       </div>
     </div>
 
     <!-- SLIDE 13: FUTURE ENHANCEMENTS -->
-    <div id="slide13" class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-8">
+    <div id="slide13"
+      class="scene-element w-full h-full flex flex-col items-center justify-center max-w-7xl mx-auto space-y-8">
       <div class="text-center w-full slide-card">
         <h2 class="text-3xl lg:text-4xl font-black text-slate-100">Future Architecture Evolution</h2>
-        <p class="text-slate-300 text-lg mt-2">Preparing the pipeline for enterprise scale, data volatility, and stricter governance.</p>
+        <p class="text-slate-300 text-lg mt-2">Preparing the pipeline for enterprise scale, data volatility, and
+          stricter governance.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-        <div class="bg-slate-800/80 border border-slate-700 p-8 rounded-2xl hover:border-cyan-500 transition-colors group slide-card shadow-lg">
-          <i class="fa-solid fa-clock-rotate-left text-4xl text-cyan-400 mb-4 group-hover:scale-110 transition-transform"></i>
+        <div
+          class="bg-slate-800/80 border border-slate-700 p-8 rounded-2xl hover:border-cyan-500 transition-colors group slide-card shadow-lg">
+          <i
+            class="fa-solid fa-clock-rotate-left text-4xl text-cyan-400 mb-4 group-hover:scale-110 transition-transform"></i>
           <h3 class="text-slate-100 font-bold text-xl mb-3">Handling Data Changes</h3>
-          <p class="text-base text-slate-300 mb-4">Implementing Slowly Changing Dimensions (SCD Type 2) in the Gold layer.</p>
+          <p class="text-base text-slate-300 mb-4">Implementing Slowly Changing Dimensions (SCD Type 2) in the Gold
+            layer.</p>
           <div class="bg-slate-900 rounded-xl p-4 text-xs font-mono text-slate-300 border border-slate-700">
             <p class="text-emerald-400"># Tracking Seller Location Updates</p>
             <p>DeltaTable.alias("target").merge(</p>
@@ -587,22 +992,29 @@
             <p>)</p>
           </div>
         </div>
-        <div class="bg-slate-800/80 border border-slate-700 p-8 rounded-2xl hover:border-purple-500 transition-colors group slide-card shadow-lg">
-          <i class="fa-solid fa-shield-halved text-4xl text-purple-400 mb-4 group-hover:scale-110 transition-transform"></i>
+        <div
+          class="bg-slate-800/80 border border-slate-700 p-8 rounded-2xl hover:border-purple-500 transition-colors group slide-card shadow-lg">
+          <i
+            class="fa-solid fa-shield-halved text-4xl text-purple-400 mb-4 group-hover:scale-110 transition-transform"></i>
           <h3 class="text-slate-100 font-bold text-xl mb-3">Schema Evolution & DQ</h3>
-          <p class="text-base text-slate-300 mb-4">Migrating from static Pytest assertions to dynamic Data Quality frameworks.</p>
+          <p class="text-base text-slate-300 mb-4">Migrating from static Pytest assertions to dynamic Data Quality
+            frameworks.</p>
           <ul class="text-sm text-slate-200 space-y-2">
-            <li><i class="fa-solid fa-check text-purple-400 mr-2"></i> Implement <strong>Great Expectations</strong></li>
+            <li><i class="fa-solid fa-check text-purple-400 mr-2"></i> Implement <strong>Great Expectations</strong>
+            </li>
             <li><i class="fa-solid fa-check text-purple-400 mr-2"></i> Enable Delta `mergeSchema` for drift</li>
             <li><i class="fa-solid fa-check text-purple-400 mr-2"></i> Anomaly detection on order volume</li>
           </ul>
         </div>
-        <div class="bg-slate-800/80 border border-slate-700 p-8 rounded-2xl hover:border-amber-500 transition-colors group slide-card shadow-lg">
+        <div
+          class="bg-slate-800/80 border border-slate-700 p-8 rounded-2xl hover:border-amber-500 transition-colors group slide-card shadow-lg">
           <i class="fa-solid fa-server text-4xl text-amber-400 mb-4 group-hover:scale-110 transition-transform"></i>
           <h3 class="text-slate-100 font-bold text-xl mb-3">Enterprise Scalability</h3>
-          <p class="text-base text-slate-300 mb-4">Optimizing performance as raw data volume scales beyond 100k+ records.</p>
+          <p class="text-base text-slate-300 mb-4">Optimizing performance as raw data volume scales beyond 100k+
+            records.</p>
           <ul class="text-sm text-slate-200 space-y-2">
-            <li><i class="fa-solid fa-check text-amber-400 mr-2"></i> <strong>FinOps:</strong> Fabric Compute (CU) Tracking</li>
+            <li><i class="fa-solid fa-check text-amber-400 mr-2"></i> <strong>FinOps:</strong> Fabric Compute (CU)
+              Tracking</li>
             <li><i class="fa-solid fa-check text-amber-400 mr-2"></i> Optimize PySpark partitioning logic</li>
             <li><i class="fa-solid fa-check text-amber-400 mr-2"></i> Evaluate streaming over batch triggers</li>
           </ul>
@@ -612,18 +1024,22 @@
 
     <!-- SLIDE 14: PROOF OF WORK HUB -->
     <div id="slide14" class="scene-element w-full h-full flex flex-col pt-4">
-      <div class="w-full max-w-7xl mx-auto flex flex-col h-full bg-[#09111e] rounded-t-2xl overflow-hidden border-t border-l border-r border-[#1e293b] slide-card">
+      <div
+        class="w-full max-w-7xl mx-auto flex flex-col h-full bg-[#09111e] rounded-t-2xl overflow-hidden border-t border-l border-r border-[#1e293b] slide-card">
         <!-- Hub Header -->
         <div class="px-8 py-6 border-b border-[#1e293b] flex justify-between items-center bg-[#0d1726]">
           <div>
-            <h4 class="text-[#0ea5e9] text-xs lg:text-sm font-bold tracking-widest uppercase mb-1 font-mono">Proof of Work & Deliverables Directory</h4>
+            <h4 class="text-[#0ea5e9] text-xs lg:text-sm font-bold tracking-widest uppercase mb-1 font-mono">Proof of
+              Work & Deliverables Directory</h4>
             <h1 class="text-2xl lg:text-3xl font-black text-white">Architecture Proof of Work Hub</h1>
           </div>
           <div class="flex items-center gap-4">
-            <div class="bg-[#0f172a] border border-[#0ea5e9]/40 text-[#0ea5e9] px-4 py-2 rounded-lg text-xs lg:text-sm font-mono shadow-[0_0_10px_rgba(14,165,233,0.1)]">
+            <div
+              class="bg-[#0f172a] border border-[#0ea5e9]/40 text-[#0ea5e9] px-4 py-2 rounded-lg text-xs lg:text-sm font-mono shadow-[0_0_10px_rgba(14,165,233,0.1)]">
               Group 2 • Error404
             </div>
-            <button onclick="restartStory()" class="bg-[#0ea5e9] hover:bg-[#38bdf8] text-[#020617] font-bold text-xs lg:text-sm px-5 py-2.5 rounded-lg shadow-[0_0_15px_rgba(14,165,233,0.4)] transition-colors flex items-center gap-2 active:scale-95">
+            <button onclick="restartStory()"
+              class="bg-[#0ea5e9] hover:bg-[#38bdf8] text-[#020617] font-bold text-xs lg:text-sm px-5 py-2.5 rounded-lg shadow-[0_0_15px_rgba(14,165,233,0.4)] transition-colors flex items-center gap-2 active:scale-95">
               <i class="fa-solid fa-rotate-left"></i> Restart Story
             </button>
           </div>
@@ -633,39 +1049,61 @@
         <div class="flex flex-col lg:flex-row flex-1 overflow-hidden p-6 lg:p-8 gap-8">
           <!-- Left Column -->
           <div class="w-full lg:w-[35%] flex flex-col border border-[#1e293b] rounded-2xl bg-[#0f172a]/50 p-6 relative">
-            <h3 class="text-[#0ea5e9] font-bold text-xl mb-5 flex items-center gap-3"><i class="fa-solid fa-link"></i> Deliverable Links</h3>
+            <h3 class="text-[#0ea5e9] font-bold text-xl mb-5 flex items-center gap-3"><i class="fa-solid fa-link"></i>
+              Deliverable Links</h3>
             <div class="space-y-4 overflow-y-auto pr-2 flex-1">
-              <div class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#0ea5e9] transition-colors group">
+              <div
+                class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#0ea5e9] transition-colors group">
                 <div class="flex justify-between items-start mb-2">
-                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i class="fa-brands fa-github text-[#0ea5e9]"></i> 1. GitHub</h4>
-                  <span class="text-xs bg-emerald-900/40 text-emerald-400 px-2.5 py-0.5 rounded border border-emerald-800/50">Perm</span>
+                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i
+                      class="fa-brands fa-github text-[#0ea5e9]"></i> 1. GitHub</h4>
+                  <span
+                    class="text-xs bg-emerald-900/40 text-emerald-400 px-2.5 py-0.5 rounded border border-emerald-800/50">Perm</span>
                 </div>
-                <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">PySpark notebooks, cleaning scripts & CI/CD.</p>
-                <a href="#" class="text-[#0ea5e9] text-xs font-bold hover:underline">View Repo <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
+                <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">PySpark notebooks, cleaning scripts &
+                  CI/CD.</p>
+                <a href="#" class="text-[#0ea5e9] text-xs font-bold hover:underline">View Repo <i
+                    class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
               </div>
-              <div class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#f59e0b] transition-colors group">
+              <div
+                class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#f59e0b] transition-colors group">
                 <div class="flex justify-between items-start mb-2">
-                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i class="fa-solid fa-chart-column text-[#f59e0b]"></i> 2. Power BI</h4>
-                  <span class="text-xs bg-amber-900/40 text-amber-400 px-2.5 py-0.5 rounded border border-amber-800/50">Oct 25</span>
+                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i
+                      class="fa-solid fa-chart-column text-[#f59e0b]"></i> 2. Power BI</h4>
+                  <span
+                    class="text-xs bg-amber-900/40 text-amber-400 px-2.5 py-0.5 rounded border border-amber-800/50">Oct
+                    25</span>
                 </div>
                 <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">Direct Lake live dashboard insights.</p>
-                <a href="#" class="text-[#f59e0b] text-xs font-bold hover:underline">Open Dash <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
+                <a href="#" class="text-[#f59e0b] text-xs font-bold hover:underline">Open Dash <i
+                    class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
               </div>
-              <div class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#a855f7] transition-colors group">
+              <div
+                class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#a855f7] transition-colors group">
                 <div class="flex justify-between items-start mb-2">
-                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i class="fa-solid fa-diagram-project text-[#a855f7]"></i> 3. Lineage</h4>
-                  <span class="text-xs bg-purple-900/40 text-purple-400 px-2.5 py-0.5 rounded border border-purple-800/50">Oct 25</span>
+                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i
+                      class="fa-solid fa-diagram-project text-[#a855f7]"></i> 3. Lineage</h4>
+                  <span
+                    class="text-xs bg-purple-900/40 text-purple-400 px-2.5 py-0.5 rounded border border-purple-800/50">Oct
+                    25</span>
                 </div>
-                <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">Lineage graph of Lakehouses & Delta tables.</p>
-                <a href="#" class="text-[#a855f7] text-xs font-bold hover:underline">Open Graph <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
+                <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">Lineage graph of Lakehouses & Delta
+                  tables.</p>
+                <a href="#" class="text-[#a855f7] text-xs font-bold hover:underline">Open Graph <i
+                    class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
               </div>
-              <div class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#3b82f6] transition-colors group">
+              <div
+                class="bg-[#1e293b]/40 border border-[#334155] rounded-xl p-4 hover:border-[#3b82f6] transition-colors group">
                 <div class="flex justify-between items-start mb-2">
-                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i class="fa-brands fa-google-drive text-[#3b82f6]"></i> 4. G-Drive</h4>
-                  <span class="text-xs bg-blue-900/40 text-blue-400 px-2.5 py-0.5 rounded border border-blue-800/50">Public</span>
+                  <h4 class="text-white font-bold text-base flex items-center gap-2"><i
+                      class="fa-brands fa-google-drive text-[#3b82f6]"></i> 4. G-Drive</h4>
+                  <span
+                    class="text-xs bg-blue-900/40 text-blue-400 px-2.5 py-0.5 rounded border border-blue-800/50">Public</span>
                 </div>
-                <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">Deck, video, and Power Automate flows.</p>
-                <a href="#" class="text-[#3b82f6] text-xs font-bold hover:underline">Open Hub <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
+                <p class="text-xs lg:text-sm text-[#94a3b8] mb-3 leading-snug">Deck, video, and Power Automate flows.
+                </p>
+                <a href="#" class="text-[#3b82f6] text-xs font-bold hover:underline">Open Hub <i
+                    class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i></a>
               </div>
             </div>
             <div class="border-t border-[#334155] pt-4 mt-4 text-xs font-mono text-[#64748b]">
@@ -676,41 +1114,56 @@
           <!-- Right Column -->
           <div class="w-full lg:w-[65%] flex flex-col border border-[#1e293b] rounded-2xl bg-[#0f172a]/50 p-6">
             <div class="flex justify-between items-center mb-5">
-              <h3 class="text-[#0ea5e9] font-bold text-xl flex items-center gap-2"><i class="fa-solid fa-camera"></i> Architecture Snapshots</h3>
-              <span class="text-xs text-[#64748b]"><i class="fa-solid fa-magnifying-glass-plus"></i> Click snapshot to zoom</span>
+              <h3 class="text-[#0ea5e9] font-bold text-xl flex items-center gap-2"><i class="fa-solid fa-camera"></i>
+                Architecture Snapshots</h3>
+              <span class="text-xs text-[#64748b]"><i class="fa-solid fa-magnifying-glass-plus"></i> Click snapshot to
+                zoom</span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 flex-1">
               <div class="bg-[#1e293b]/60 border border-[#334155] rounded-xl p-4 flex flex-col">
                 <div class="flex justify-between items-center mb-3">
-                  <h4 class="text-white text-base font-bold flex items-center gap-2"><i class="fa-solid fa-gears text-[#f59e0b]"></i> Fabric Pipeline</h4>
-                  <span class="text-xs bg-[#0ea5e9]/20 text-[#0ea5e9] px-2 py-0.5 rounded border border-[#0ea5e9]/40">Orchestration</span>
+                  <h4 class="text-white text-base font-bold flex items-center gap-2"><i
+                      class="fa-solid fa-gears text-[#f59e0b]"></i> Fabric Pipeline</h4>
+                  <span
+                    class="text-xs bg-[#0ea5e9]/20 text-[#0ea5e9] px-2 py-0.5 rounded border border-[#0ea5e9]/40">Orchestration</span>
                 </div>
-                <div class="flex-1 bg-white rounded-lg border border-[#475569] mb-3 overflow-hidden relative group cursor-pointer min-h-[140px]">
+                <div
+                  class="flex-1 bg-white rounded-lg border border-[#475569] mb-3 overflow-hidden relative group cursor-pointer min-h-[140px]">
                   <img src="fabric-pipeline.png" alt="Fabric Pipeline" class="w-full h-full object-cover">
-                  <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div
+                    class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <i class="fa-solid fa-expand text-white text-2xl"></i>
                   </div>
                 </div>
-                <p class="text-xs text-[#94a3b8] leading-relaxed">Medallion ELT pipeline execution across Bronze, Silver, and Gold layers.</p>
+                <p class="text-xs text-[#94a3b8] leading-relaxed">Medallion ELT pipeline execution across Bronze,
+                  Silver, and Gold layers.</p>
               </div>
               <div class="bg-[#1e293b]/60 border border-[#334155] rounded-xl p-4 flex flex-col">
                 <div class="flex justify-between items-center mb-3">
-                  <h4 class="text-white text-base font-bold flex items-center gap-2"><i class="fa-solid fa-bolt text-[#a855f7]"></i> Power Automate</h4>
-                  <span class="text-xs bg-[#a855f7]/20 text-[#a855f7] px-2 py-0.5 rounded border border-[#a855f7]/40">Webhook Flow</span>
+                  <h4 class="text-white text-base font-bold flex items-center gap-2"><i
+                      class="fa-solid fa-bolt text-[#a855f7]"></i> Power Automate</h4>
+                  <span
+                    class="text-xs bg-[#a855f7]/20 text-[#a855f7] px-2 py-0.5 rounded border border-[#a855f7]/40">Webhook
+                    Flow</span>
                 </div>
-                <div class="flex-1 bg-white rounded-lg border border-[#475569] mb-3 overflow-hidden relative group cursor-pointer min-h-[140px]">
+                <div
+                  class="flex-1 bg-white rounded-lg border border-[#475569] mb-3 overflow-hidden relative group cursor-pointer min-h-[140px]">
                   <img src="power-automate.png" alt="Power Automate Flow" class="w-full h-full object-cover">
-                  <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div
+                    class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <i class="fa-solid fa-expand text-white text-2xl"></i>
                   </div>
                 </div>
-                <p class="text-xs text-[#94a3b8] leading-relaxed">Event-driven automation triggering Fabric pipeline upon GitHub merge.</p>
+                <p class="text-xs text-[#94a3b8] leading-relaxed">Event-driven automation triggering Fabric pipeline
+                  upon GitHub merge.</p>
               </div>
             </div>
             <div class="bg-[#1e293b]/80 border border-[#334155] rounded-xl p-4 flex gap-4">
               <i class="fa-solid fa-shield-halved text-[#0ea5e9] text-xl mt-0.5"></i>
               <p class="text-xs lg:text-sm text-[#cbd5e1] font-mono leading-relaxed">
-                <strong class="text-white font-sans">Proof of Work Justification:</strong> Screenshots prove full end-to-end functionality of Microsoft Fabric pipelines and Power Automate webhooks under restricted trial-tenant conditions.
+                <strong class="text-white font-sans">Proof of Work Justification:</strong> Screenshots prove full
+                end-to-end functionality of Microsoft Fabric pipelines and Power Automate webhooks under restricted
+                trial-tenant conditions.
               </p>
             </div>
             <div class="mt-auto pt-4 flex justify-start items-end">
@@ -730,6 +1183,8 @@
     let currentStep = 1;
     const totalSteps = 14;
     let isAnimating = false;
+    let pipelineTimeline = null;
+    let pipelineResizeTimer = null;
 
     const titles = [
       "1. The Business Context",
@@ -785,8 +1240,93 @@
       }
     }
 
+    function stopPipelineAnimation() {
+      if (pipelineTimeline) {
+        pipelineTimeline.kill();
+        pipelineTimeline = null;
+      }
+      document.querySelectorAll('.pipeline-neon-dot').forEach((dot) => {
+        dot.classList.remove('pipeline-neon-dot-active');
+        gsap.set(dot, { autoAlpha: 0 });
+      });
+    }
+
+    function startPipelineAnimation() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const flow = document.getElementById('pipelineFlow');
+      const fabricDot = document.getElementById('pipelineFabricDot');
+      const localDot = document.getElementById('pipelineLocalDot');
+      const positionFor = (step) => {
+        const card = flow.querySelector(`[data-pipeline-step="${step}"]`);
+        const cardBounds = card.getBoundingClientRect();
+        const flowBounds = flow.getBoundingClientRect();
+        return {
+          left: cardBounds.left - flowBounds.left + cardBounds.width / 2,
+          top: cardBounds.top - flowBounds.top + cardBounds.height / 2
+        };
+      };
+      const timeline = gsap.timeline({ repeat: -1, repeatDelay: 0.4 });
+      pipelineTimeline = timeline;
+
+      const localStart = positionFor(1);
+      const fabricStart = positionFor(3);
+      gsap.set(localDot, { ...localStart, autoAlpha: 1 });
+      gsap.set(fabricDot, { ...fabricStart, autoAlpha: 0 });
+      localDot.classList.add('pipeline-neon-dot-active');
+      fabricDot.classList.remove('pipeline-neon-dot-active');
+
+      const moveThrough = (dot, from, to) => {
+        for (let step = from; step <= to; step++) {
+          timeline.to(dot, {
+            ...positionFor(step),
+            autoAlpha: 1,
+            duration: 0.48,
+            ease: 'power1.inOut'
+          });
+        }
+      };
+      const crossHandoff = (fromDot, toDot, targetStep) => {
+        const targetPosition = positionFor(targetStep);
+        timeline.to(fromDot, {
+          ...targetPosition,
+          autoAlpha: 0.35,
+          duration: 0.72,
+          ease: 'power2.inOut'
+        });
+        timeline.set(fromDot, { autoAlpha: 0 });
+        timeline.set(toDot, { ...targetPosition, autoAlpha: 1 });
+        timeline.call(() => {
+          fromDot.classList.remove('pipeline-neon-dot-active');
+          toDot.classList.add('pipeline-neon-dot-active');
+        });
+      };
+
+      moveThrough(localDot, 2, 2);
+      crossHandoff(localDot, fabricDot, 3);
+      moveThrough(fabricDot, 4, 6);
+      timeline.to({}, { duration: 0.85 });
+      crossHandoff(fabricDot, localDot, 7);
+      moveThrough(localDot, 8, 10);
+      crossHandoff(localDot, fabricDot, 11);
+      moveThrough(fabricDot, 11, 16);
+      timeline.to({}, { duration: 0.85 });
+      crossHandoff(fabricDot, localDot, 17);
+      moveThrough(localDot, 18, 20);
+      crossHandoff(localDot, fabricDot, 21);
+      moveThrough(fabricDot, 22, 26);
+      timeline.to([fabricDot, localDot], { autoAlpha: 0, duration: 0.35 });
+      timeline.set(localDot, { ...localStart, autoAlpha: 1 });
+      timeline.set(fabricDot, { ...fabricStart, autoAlpha: 0 });
+      timeline.call(() => {
+        fabricDot.classList.remove('pipeline-neon-dot-active');
+        localDot.classList.add('pipeline-neon-dot-active');
+      });
+    }
+
     function showSlide(targetStep, forceReset = false) {
       // Kill any active GSAP tweens on slide switch to ensure complete state cleanup
+      stopPipelineAnimation();
       gsap.killTweensOf("*");
 
       const outgoingSlide = document.getElementById(`slide${currentStep}`);
@@ -808,12 +1348,13 @@
             gsap.set(children, { clearProps: "all" });
           }
         }
-        
+
         incomingSlide.classList.add('scene-visible');
         gsap.set(incomingSlide, { opacity: 1, scale: 1, y: 0 });
         currentStep = targetStep;
         isAnimating = false;
         animateChildCards(incomingSlide);
+        if (targetStep === 9) startPipelineAnimation();
         return;
       }
 
@@ -833,17 +1374,18 @@
 
             // 2. Animate Incoming Slide In
             incomingSlide.classList.add('scene-visible');
-            gsap.fromTo(incomingSlide, 
+            gsap.fromTo(incomingSlide,
               { opacity: 0, scale: 1.04, y: 20 },
-              { 
-                opacity: 1, 
-                scale: 1, 
-                y: 0, 
-                duration: 0.4, 
+              {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.4,
                 ease: "power3.out",
                 onComplete: () => {
                   isAnimating = false;
                   currentStep = targetStep;
+                  if (targetStep === 9) startPipelineAnimation();
                 }
               }
             );
@@ -859,11 +1401,11 @@
       if (childElements.length > 0) {
         gsap.fromTo(childElements,
           { opacity: 0, y: 16 },
-          { 
-            opacity: 1, 
-            y: 0, 
-            duration: 0.35, 
-            stagger: 0.04, 
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.35,
+            stagger: 0.04,
             ease: "power2.out",
             delay: 0.05
           }
@@ -890,6 +1432,16 @@
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ') nextScene();
       if (e.key === 'ArrowLeft') prevScene();
+    });
+
+    window.addEventListener('resize', () => {
+      window.clearTimeout(pipelineResizeTimer);
+      if (currentStep === 9) {
+        pipelineResizeTimer = window.setTimeout(() => {
+          stopPipelineAnimation();
+          startPipelineAnimation();
+        }, 200);
+      }
     });
 
     // Initial setup
